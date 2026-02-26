@@ -161,6 +161,52 @@
     display: flex; align-items: center; gap: 4px;
   }
 
+  /* IMAGE GALLERY */
+  .card-gallery {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-gallery-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+  }
+  .card-gallery-track::-webkit-scrollbar { display: none; }
+  .card-gallery-track.grabbing { cursor: grabbing; }
+  .card-gallery-track img {
+    flex-shrink: 0;
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    scroll-snap-align: start;
+    display: block;
+    background: #1a1a1a;
+  }
+  .gallery-dots {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    z-index: 2;
+  }
+  .gallery-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: background 0.2s, width 0.2s;
+    cursor: pointer;
+  }
+  .gallery-dot.active {
+    background: rgba(255,255,255,0.9);
+    width: 12px;
+    border-radius: 2px;
+  }
+
   /* VIEWER MODAL */
   .modal-bg {
     display: none;
@@ -257,7 +303,7 @@ const products = [
     tag: 'Notion Template',
     tagColor: '#4a9eff',
     tagBg: 'rgba(74,158,255,0.1)',
-    cover: 'businesses/01-vessel/images/cover.jpg',
+    images: ['businesses/01-vessel/images/cover.jpg','businesses/01-vessel/images/preview.jpg','businesses/01-vessel/images/feature-1.jpg','businesses/01-vessel/images/feature-2.jpg','businesses/01-vessel/images/social.jpg'],
     file: null
   },
   {
@@ -268,7 +314,7 @@ const products = [
     tag: 'Content Templates',
     tagColor: '#f5c518',
     tagBg: 'rgba(245,197,24,0.1)',
-    cover: 'businesses/02-draft/images/cover.jpg',
+    images: ['businesses/02-draft/images/cover.jpg','businesses/02-draft/images/preview.jpg','businesses/02-draft/images/feature-1.jpg','businesses/02-draft/images/feature-2.jpg','businesses/02-draft/images/social.jpg'],
     file: 'businesses/02-draft/90-Days-of-Crypto-Content.html'
   },
   {
@@ -279,7 +325,7 @@ const products = [
     tag: 'Prompt Library',
     tagColor: '#a78bfa',
     tagBg: 'rgba(167,139,250,0.1)',
-    cover: 'businesses/03-stack/images/cover.jpg',
+    images: ['businesses/03-stack/images/cover.jpg','businesses/03-stack/images/preview.jpg','businesses/03-stack/images/feature-1.jpg','businesses/03-stack/images/feature-2.jpg','businesses/03-stack/images/social.jpg'],
     file: 'businesses/03-stack/STACK-Prompt-Vault.html'
   },
   {
@@ -290,7 +336,7 @@ const products = [
     tag: 'Brand Kit',
     tagColor: '#c9a84c',
     tagBg: 'rgba(201,168,76,0.1)',
-    cover: 'businesses/04-blueprint/images/cover.jpg',
+    images: ['businesses/04-blueprint/images/cover.jpg','businesses/04-blueprint/images/preview.jpg','businesses/04-blueprint/images/feature-1.jpg','businesses/04-blueprint/images/feature-2.jpg','businesses/04-blueprint/images/social.jpg'],
     file: 'businesses/04-blueprint/Web3-Brand-Starter-Kit.html'
   },
   {
@@ -301,7 +347,7 @@ const products = [
     tag: 'Notion Template',
     tagColor: '#3ecf8e',
     tagBg: 'rgba(62,207,142,0.1)',
-    cover: 'businesses/05-ledger/images/cover.jpg',
+    images: ['businesses/05-ledger/images/cover.jpg','businesses/05-ledger/images/preview.jpg','businesses/05-ledger/images/feature-1.jpg','businesses/05-ledger/images/feature-2.jpg','businesses/05-ledger/images/social.jpg'],
     file: 'businesses/05-ledger/Crypto-Portfolio-Tracker.html'
   },
   {
@@ -312,7 +358,7 @@ const products = [
     tag: 'Playbook',
     tagColor: '#ff6b6b',
     tagBg: 'rgba(255,107,107,0.1)',
-    cover: 'businesses/06-flow/images/cover.jpg',
+    images: ['businesses/06-flow/images/cover.jpg','businesses/06-flow/images/preview.jpg','businesses/06-flow/images/feature-1.jpg','businesses/06-flow/images/feature-2.jpg','businesses/06-flow/images/social.jpg'],
     file: 'businesses/06-flow/Community-Growth-Bible.html'
   },
   {
@@ -323,7 +369,7 @@ const products = [
     tag: 'Twitter Templates',
     tagColor: '#4a9eff',
     tagBg: 'rgba(74,158,255,0.1)',
-    cover: 'businesses/07-pulse/images/cover.jpg',
+    images: ['businesses/07-pulse/images/cover.jpg','businesses/07-pulse/images/preview.jpg','businesses/07-pulse/images/feature-1.jpg','businesses/07-pulse/images/feature-2.jpg','businesses/07-pulse/images/social.jpg'],
     file: 'businesses/07-pulse/Crypto-Twitter-Mastery-Pack.html'
   },
   {
@@ -334,7 +380,7 @@ const products = [
     tag: 'Notion Template',
     tagColor: '#fb923c',
     tagBg: 'rgba(251,146,60,0.1)',
-    cover: 'businesses/08-forge/images/cover.jpg',
+    images: ['businesses/08-forge/images/cover.jpg','businesses/08-forge/images/preview.jpg','businesses/08-forge/images/feature-1.jpg','businesses/08-forge/images/feature-2.jpg','businesses/08-forge/images/social.jpg'],
     file: null
   }
 ];
@@ -348,15 +394,18 @@ const modalIframe = document.getElementById('modal-iframe');
 const modalLoading = document.getElementById('modal-loading');
 
 products.forEach(p => {
-  const card = document.createElement(p.file ? 'a' : 'div');
+  const card = document.createElement('div');
   card.className = 'card';
-  if (!p.file) card.style.opacity = '0.6';
+  if (!p.file) card.style.opacity = '0.7';
 
-  const coverHtml = `<img class="card-cover" src="${p.cover}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="card-cover-placeholder" style="display:none;color:${p.tagColor}">${p.name}</div>`;
+  const imgs = p.images || [];
+  const imgsHtml = imgs.map(src => `<img src="${src}" alt="${p.name}" loading="lazy">`).join('');
 
   card.innerHTML = `
-    ${coverHtml}
+    <div class="card-gallery">
+      <div class="card-gallery-track" data-gallery="${p.id}">${imgsHtml}</div>
+      <div class="gallery-dots">${imgs.map((_,i) => `<div class="gallery-dot${i===0?' active':''}" data-idx="${i}" data-gallery="${p.id}"></div>`).join('')}</div>
+    </div>
     <div class="card-body">
       <div class="card-top">
         <span class="card-name">${p.name}</span>
@@ -370,9 +419,42 @@ products.forEach(p => {
     </div>
   `;
 
+  // Gallery drag scroll
+  const track = card.querySelector('.card-gallery-track');
+  let isDragging = false, startX = 0, scrollLeft = 0;
+  track.addEventListener('mousedown', e => {
+    isDragging = true; startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft;
+    track.classList.add('grabbing');
+  });
+  track.addEventListener('mouseleave', () => { isDragging = false; track.classList.remove('grabbing'); });
+  track.addEventListener('mouseup', () => { isDragging = false; track.classList.remove('grabbing'); });
+  track.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    track.scrollLeft = scrollLeft - (x - startX) * 1.5;
+  });
+
+  // Update dots on scroll
+  track.addEventListener('scroll', () => {
+    const idx = Math.round(track.scrollLeft / track.offsetWidth);
+    card.querySelectorAll('.gallery-dot').forEach((d,i) => d.classList.toggle('active', i === idx));
+  });
+
+  // Dot click
+  card.querySelectorAll('.gallery-dot').forEach(dot => {
+    dot.addEventListener('click', e => {
+      e.stopPropagation();
+      const idx = parseInt(dot.dataset.idx);
+      track.scrollTo({ left: idx * track.offsetWidth, behavior: 'smooth' });
+    });
+  });
+
+  // Card click opens modal (only if has file)
   if (p.file) {
+    card.style.cursor = 'pointer';
     card.addEventListener('click', (e) => {
-      e.preventDefault();
+      if (e.target.closest('.card-gallery-track') && isDragging) return;
       openModal(p);
     });
   }
