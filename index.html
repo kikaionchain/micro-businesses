@@ -9,402 +9,326 @@
     --bg: #0a0a0a;
     --surface: #111;
     --border: #1e1e1e;
-    --border-hover: #333;
     --text: #f0f0f0;
-    --muted: #666;
+    --muted: #555;
     --accent: #6366f1;
-    --accent-glow: rgba(99,102,241,0.15);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
-    min-height: 100vh;
-  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; }
 
-  /* NAV */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(10,10,10,0.9); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 0 32px;
-    height: 56px;
+    padding: 0 32px; height: 56px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .nav-logo {
-    font-size: 15px; font-weight: 700; letter-spacing: -0.02em;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-right {
-    font-size: 12px; color: var(--muted);
-  }
+  .logo { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
 
-  /* HERO */
   .hero {
-    text-align: center;
-    padding: 80px 32px 64px;
+    text-align: center; padding: 72px 32px 56px;
     border-bottom: 1px solid var(--border);
   }
-  .hero-eyebrow {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--accent);
-    margin-bottom: 16px;
-  }
-  .hero h1 {
-    font-size: clamp(32px, 5vw, 56px);
-    font-weight: 800; letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-  .hero p {
-    font-size: 16px; color: var(--muted);
-    max-width: 480px; margin: 0 auto 32px;
-    line-height: 1.6;
-  }
-  .hero-stats {
-    display: flex; justify-content: center; gap: 40px;
-  }
-  .stat { text-align: center; }
-  .stat-n { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; }
-  .stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 14px; }
+  .hero p { font-size: 15px; color: var(--muted); max-width: 420px; margin: 0 auto; line-height: 1.6; }
 
-  /* GRID */
-  .grid-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 48px 32px 80px;
+  .grid-wrap { max-width: 1200px; margin: 0 auto; padding: 48px 24px 80px; }
+  .section-lbl {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
+    margin-bottom: 24px; display: flex; align-items: center; gap: 12px;
   }
-  .section-label {
-    font-size: 11px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--muted);
-    margin-bottom: 24px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .section-label::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
-  }
+  .section-lbl::after { content:''; flex:1; height:1px; background: var(--border); }
 
-  /* CARD */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    display: block;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
   }
-  .card:hover {
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  .card:hover { border-color: #333; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+
+  /* IMAGE CAROUSEL */
+  .carousel { position: relative; background: #0d0d0d; aspect-ratio: 16/9; overflow: hidden; }
+  .carousel-track {
+    display: flex; height: 100%; width: 100%;
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1);
   }
-  .card-cover {
-    width: 100%; aspect-ratio: 16/9;
-    object-fit: cover;
-    display: block;
-    background: #1a1a1a;
+  .carousel-track img {
+    flex-shrink: 0; width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  .card-cover-placeholder {
-    width: 100%; aspect-ratio: 16/9;
-    background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+  .carousel-placeholder {
+    flex-shrink: 0; width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 40px; font-weight: 800; letter-spacing: -0.04em;
+    font-size: 32px; font-weight: 900; letter-spacing: -0.04em;
   }
-  .card-body {
-    padding: 20px;
+  .carousel-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s; z-index: 2; opacity: 0;
+    transition: opacity 0.2s;
   }
-  .card-top {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    margin-bottom: 8px;
+  .carousel:hover .carousel-btn { opacity: 1; }
+  .carousel-btn:hover { background: rgba(0,0,0,0.9); }
+  .carousel-prev { left: 8px; }
+  .carousel-next { right: 8px; }
+  .carousel-dots {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 4px; z-index: 2;
   }
-  .card-name {
-    font-size: 15px; font-weight: 700; letter-spacing: -0.01em;
+  .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(255,255,255,0.35); cursor: pointer; transition: all 0.2s;
   }
-  .card-price {
-    font-size: 14px; font-weight: 700;
-    color: var(--text);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 2px 10px;
-    white-space: nowrap;
-  }
-  .card-tagline {
-    font-size: 13px; color: var(--muted);
-    margin-bottom: 14px;
-    line-height: 1.4;
-  }
-  .card-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-  }
-  .card-tag {
-    font-size: 10px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 3px 8px; border-radius: 4px;
-  }
-  .card-cta {
-    font-size: 12px; color: var(--accent); font-weight: 600;
-    display: flex; align-items: center; gap: 4px;
-  }
+  .dot.on { background: #fff; width: 14px; border-radius: 3px; }
 
-  /* IMAGE GALLERY */
-  .card-gallery {
-    position: relative;
-    overflow: hidden;
-  }
-  .card-gallery-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    cursor: grab;
-  }
-  .card-gallery-track::-webkit-scrollbar { display: none; }
-  .card-gallery-track.grabbing { cursor: grabbing; }
-  .card-gallery-track img {
-    flex-shrink: 0;
-    width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    scroll-snap-align: start;
-    display: block;
-    background: #1a1a1a;
-  }
-  .gallery-dots {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 4px;
-    z-index: 2;
-  }
-  .gallery-dot {
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.3);
-    transition: background 0.2s, width 0.2s;
-    cursor: pointer;
-  }
-  .gallery-dot.active {
-    background: rgba(255,255,255,0.9);
-    width: 12px;
-    border-radius: 2px;
-  }
+  .card-body { padding: 18px; }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+  .card-name { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .card-price { font-size: 13px; font-weight: 700; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 2px 9px; }
+  .card-tagline { font-size: 12px; color: var(--muted); line-height: 1.4; margin-bottom: 14px; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); }
+  .card-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 8px; border-radius: 4px; }
+  .card-cta { font-size: 12px; font-weight: 600; color: var(--accent); cursor: pointer; }
+  .card-cta:hover { text-decoration: underline; }
+  .card-cta.dim { color: var(--muted); cursor: default; }
 
-  /* VIEWER MODAL */
+  /* LIGHTBOX */
+  .lb {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.92); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+  }
+  .lb.open { display: flex; }
+  .lb-img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 24px 80px rgba(0,0,0,0.8); }
+  .lb-close {
+    position: fixed; top: 20px; right: 24px;
+    width: 36px; height: 36px; border-radius: 8px;
+    background: #1e1e1e; border: 1px solid #333;
+    color: #ccc; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lb-close:hover { background: #2a2a2a; color: #fff; }
+  .lb-prev, .lb-next {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(20,20,20,0.9); border: 1px solid #333;
+    color: #fff; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .lb-prev:hover, .lb-next:hover { background: #222; }
+  .lb-prev { left: 16px; }
+  .lb-next { right: 16px; }
+  .lb-counter { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #666; }
+
+  /* PREVIEW MODAL */
   .modal-bg {
-    display: none;
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(4px);
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+    flex-direction: column;
   }
-  .modal-bg.open { display: flex; flex-direction: column; }
+  .modal-bg.open { display: flex; }
   .modal-bar {
-    height: 52px; flex-shrink: 0;
-    background: #111;
+    height: 52px; flex-shrink: 0; background: #111;
     border-bottom: 1px solid #222;
-    display: flex; align-items: center; gap: 12px;
-    padding: 0 20px;
+    display: flex; align-items: center; gap: 12px; padding: 0 20px;
   }
-  .modal-close {
+  .modal-close-btn {
     width: 28px; height: 28px; border-radius: 6px;
     background: #1e1e1e; border: 1px solid #2a2a2a;
     color: #ccc; cursor: pointer; font-size: 16px;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; flex-shrink: 0;
   }
-  .modal-close:hover { background: #2a2a2a; color: #fff; }
+  .modal-close-btn:hover { background: #2a2a2a; color: #fff; }
   .modal-title { font-size: 13px; font-weight: 600; flex: 1; }
-  .modal-newtab {
-    font-size: 12px; color: #4a9eff;
-    text-decoration: none; padding: 4px 10px;
-    border: 1px solid #1e3a5a; border-radius: 5px;
-    transition: all 0.15s; white-space: nowrap;
-  }
-  .modal-newtab:hover { background: #1e3a5a; }
-  .modal-iframe-wrap { flex: 1; overflow: hidden; position: relative; }
-  .modal-iframe-wrap iframe {
-    width: 100%; height: 100%; border: none; display: block;
-  }
-  .modal-loading {
-    position: absolute; inset: 0;
+  .modal-new { font-size: 12px; color: #4a9eff; text-decoration: none; padding: 4px 10px; border: 1px solid #1e3a5a; border-radius: 5px; }
+  .modal-new:hover { background: #1e3a5a; }
+  .modal-frame-wrap { flex: 1; position: relative; overflow: hidden; }
+  .modal-frame-wrap iframe { width: 100%; height: 100%; border: none; }
+  .modal-spinner {
+    position: absolute; inset: 0; background: #0d0d0d;
     display: flex; align-items: center; justify-content: center;
-    background: #0d0d0d;
     transition: opacity 0.3s;
   }
-  .modal-loading.gone { opacity: 0; pointer-events: none; }
-  .spinner {
-    width: 22px; height: 22px;
-    border: 2px solid #222; border-top-color: #fff;
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-  }
+  .modal-spinner.gone { opacity: 0; pointer-events: none; }
+  .spinner { width: 22px; height: 22px; border: 2px solid #222; border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
 <nav>
-  <a class="nav-logo" href="#"><span>for</span> crypto</a>
-  <span class="nav-right">WJP · Digital Products</span>
+  <div class="logo"><span>for</span> crypto</div>
+  <span style="font-size:12px;color:#444">WJP · Digital Products</span>
 </nav>
 
 <div class="hero">
-  <div class="hero-eyebrow">Digital Products</div>
+  <div class="eyebrow">Digital Products</div>
   <h1>Everything you need<br>to win in Web3</h1>
   <p>Templates, trackers, playbooks, and frameworks built for crypto-native creators.</p>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-n">8</div><div class="stat-l">Products</div></div>
-    <div class="stat"><div class="stat-n">$174</div><div class="stat-l">Total Value</div></div>
-    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Previews</div></div>
-  </div>
 </div>
 
 <div class="grid-wrap">
-  <div class="section-label">All Products</div>
+  <div class="section-lbl">All Products</div>
   <div class="grid" id="grid"></div>
 </div>
 
-<!-- VIEWER MODAL -->
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <div class="lb-close" id="lb-close">✕</div>
+  <img class="lb-img" id="lb-img" src="" alt="">
+  <div class="lb-prev" id="lb-prev">‹</div>
+  <div class="lb-next" id="lb-next">›</div>
+  <div class="lb-counter" id="lb-counter"></div>
+</div>
+
+<!-- PREVIEW MODAL -->
 <div class="modal-bg" id="modal">
   <div class="modal-bar">
-    <div class="modal-close" id="modal-close">✕</div>
+    <div class="modal-close-btn" id="modal-close">✕</div>
     <span class="modal-title" id="modal-title"></span>
-    <a class="modal-newtab" id="modal-newtab" href="#" target="_blank">Open in new tab ↗</a>
+    <a class="modal-new" id="modal-new" href="#" target="_blank">Open in new tab ↗</a>
   </div>
-  <div class="modal-iframe-wrap">
-    <iframe id="modal-iframe" src="" title="Product Preview"></iframe>
-    <div class="modal-loading" id="modal-loading"><div class="spinner"></div></div>
+  <div class="modal-frame-wrap">
+    <iframe id="modal-iframe" src="" title="Preview"></iframe>
+    <div class="modal-spinner" id="modal-spinner"><div class="spinner"></div></div>
   </div>
 </div>
 
 <script>
 const products = [
   {
-    id: 'vessel',
-    name: 'VESSEL',
-    tagline: 'Notion writing OS for creators. Capture, organize, publish — all in one system.',
-    price: '$22',
-    tag: 'Notion Template',
-    tagColor: '#4a9eff',
-    tagBg: 'rgba(74,158,255,0.1)',
-    images: ['businesses/01-vessel/images/cover.jpg','businesses/01-vessel/images/preview.jpg','businesses/01-vessel/images/feature-1.jpg','businesses/01-vessel/images/feature-2.jpg','businesses/01-vessel/images/social.jpg'],
-    file: null
+    id:'vessel', name:'VESSEL', price:'$22',
+    tagline:'Notion writing OS for creators. Capture, organize, and publish from one system.',
+    tag:'Notion Template', tagColor:'#4a9eff', tagBg:'rgba(74,158,255,0.1)',
+    images:['businesses/01-vessel/images/cover.jpg','businesses/01-vessel/images/preview.jpg','businesses/01-vessel/images/feature-1.jpg','businesses/01-vessel/images/feature-2.jpg','businesses/01-vessel/images/social.jpg'],
+    file:null
   },
   {
-    id: 'draft',
-    name: 'DRAFT',
-    tagline: '90 days of crypto content — 5 categories, 90 fill-in-the-blank templates.',
-    price: '$19',
-    tag: 'Content Templates',
-    tagColor: '#f5c518',
-    tagBg: 'rgba(245,197,24,0.1)',
-    images: ['businesses/02-draft/images/cover.jpg','businesses/02-draft/images/preview.jpg','businesses/02-draft/images/feature-1.jpg','businesses/02-draft/images/feature-2.jpg','businesses/02-draft/images/social.jpg'],
-    file: 'businesses/02-draft/90-Days-of-Crypto-Content.html'
+    id:'draft', name:'DRAFT', price:'$19',
+    tagline:'90 days of crypto content — 5 categories, 90 fill-in-the-blank templates.',
+    tag:'Content Templates', tagColor:'#f5c518', tagBg:'rgba(245,197,24,0.1)',
+    images:['businesses/02-draft/images/cover.jpg','businesses/02-draft/images/preview.jpg','businesses/02-draft/images/feature-1.jpg','businesses/02-draft/images/feature-2.jpg','businesses/02-draft/images/social.jpg'],
+    file:'businesses/02-draft/90-Days-of-Crypto-Content.html'
   },
   {
-    id: 'stack',
-    name: 'STACK',
-    tagline: '200+ crypto AI prompts organized by use case. Ship faster with better output.',
-    price: '$27',
-    tag: 'Prompt Library',
-    tagColor: '#a78bfa',
-    tagBg: 'rgba(167,139,250,0.1)',
-    images: ['businesses/03-stack/images/cover.jpg','businesses/03-stack/images/preview.jpg','businesses/03-stack/images/feature-1.jpg','businesses/03-stack/images/feature-2.jpg','businesses/03-stack/images/social.jpg'],
-    file: 'businesses/03-stack/STACK-Prompt-Vault.html'
+    id:'stack', name:'STACK', price:'$27',
+    tagline:'200+ crypto AI prompts organized by use case. Ship faster with better output.',
+    tag:'Prompt Library', tagColor:'#a78bfa', tagBg:'rgba(167,139,250,0.1)',
+    images:['businesses/03-stack/images/cover.jpg','businesses/03-stack/images/preview.jpg','businesses/03-stack/images/feature-1.jpg','businesses/03-stack/images/feature-2.jpg','businesses/03-stack/images/social.jpg'],
+    file:'businesses/03-stack/STACK-Prompt-Vault.html'
   },
   {
-    id: 'blueprint',
-    name: 'BLUEPRINT',
-    tagline: 'Full Web3 brand kit — color palettes, type pairings, logo worksheet, pitch deck.',
-    price: '$37',
-    tag: 'Brand Kit',
-    tagColor: '#c9a84c',
-    tagBg: 'rgba(201,168,76,0.1)',
-    images: ['businesses/04-blueprint/images/cover.jpg','businesses/04-blueprint/images/preview.jpg','businesses/04-blueprint/images/feature-1.jpg','businesses/04-blueprint/images/feature-2.jpg','businesses/04-blueprint/images/social.jpg'],
-    file: 'businesses/04-blueprint/Web3-Brand-Starter-Kit.html'
+    id:'blueprint', name:'BLUEPRINT', price:'$37',
+    tagline:'Full Web3 brand kit — color palettes, type pairings, logo worksheet, pitch deck.',
+    tag:'Brand Kit', tagColor:'#c9a84c', tagBg:'rgba(201,168,76,0.1)',
+    images:['businesses/04-blueprint/images/cover.jpg','businesses/04-blueprint/images/preview.jpg','businesses/04-blueprint/images/feature-1.jpg','businesses/04-blueprint/images/feature-2.jpg','businesses/04-blueprint/images/social.jpg'],
+    file:'businesses/04-blueprint/Web3-Brand-Starter-Kit.html'
   },
   {
-    id: 'ledger',
-    name: 'LEDGER',
-    tagline: 'Crypto portfolio tracker in Notion. Databases, views, journal, review templates.',
-    price: '$17',
-    tag: 'Notion Template',
-    tagColor: '#3ecf8e',
-    tagBg: 'rgba(62,207,142,0.1)',
-    images: ['businesses/05-ledger/images/cover.jpg','businesses/05-ledger/images/preview.jpg','businesses/05-ledger/images/feature-1.jpg','businesses/05-ledger/images/feature-2.jpg','businesses/05-ledger/images/social.jpg'],
-    file: 'businesses/05-ledger/Crypto-Portfolio-Tracker.html'
+    id:'ledger', name:'LEDGER', price:'$17',
+    tagline:'Crypto portfolio tracker in Notion. Databases, views, journal, review templates.',
+    tag:'Notion Template', tagColor:'#3ecf8e', tagBg:'rgba(62,207,142,0.1)',
+    images:['businesses/05-ledger/images/cover.jpg','businesses/05-ledger/images/preview.jpg','businesses/05-ledger/images/feature-1.jpg','businesses/05-ledger/images/feature-2.jpg','businesses/05-ledger/images/social.jpg'],
+    file:'businesses/05-ledger/Crypto-Portfolio-Tracker.html'
   },
   {
-    id: 'flow',
-    name: 'FLOW',
-    tagline: 'Community growth playbook. 0 to 10K members with templates and scripts.',
-    price: '$29',
-    tag: 'Playbook',
-    tagColor: '#ff6b6b',
-    tagBg: 'rgba(255,107,107,0.1)',
-    images: ['businesses/06-flow/images/cover.jpg','businesses/06-flow/images/preview.jpg','businesses/06-flow/images/feature-1.jpg','businesses/06-flow/images/feature-2.jpg','businesses/06-flow/images/social.jpg'],
-    file: 'businesses/06-flow/Community-Growth-Bible.html'
+    id:'flow', name:'FLOW', price:'$29',
+    tagline:'Community growth playbook. 0 to 10K members with templates and scripts.',
+    tag:'Playbook', tagColor:'#ff6b6b', tagBg:'rgba(255,107,107,0.1)',
+    images:['businesses/06-flow/images/cover.jpg','businesses/06-flow/images/preview.jpg','businesses/06-flow/images/feature-1.jpg','businesses/06-flow/images/feature-2.jpg','businesses/06-flow/images/social.jpg'],
+    file:'businesses/06-flow/Community-Growth-Bible.html'
   },
   {
-    id: 'pulse',
-    name: 'PULSE',
-    tagline: '50 Crypto Twitter templates + full growth guide. Build the account, fast.',
-    price: '$24',
-    tag: 'Twitter Templates',
-    tagColor: '#4a9eff',
-    tagBg: 'rgba(74,158,255,0.1)',
-    images: ['businesses/07-pulse/images/cover.jpg','businesses/07-pulse/images/preview.jpg','businesses/07-pulse/images/feature-1.jpg','businesses/07-pulse/images/feature-2.jpg','businesses/07-pulse/images/social.jpg'],
-    file: 'businesses/07-pulse/Crypto-Twitter-Mastery-Pack.html'
+    id:'pulse', name:'PULSE', price:'$24',
+    tagline:'50 Crypto Twitter templates + full growth guide. Build the account, fast.',
+    tag:'Twitter Templates', tagColor:'#4a9eff', tagBg:'rgba(74,158,255,0.1)',
+    images:['businesses/07-pulse/images/cover.jpg','businesses/07-pulse/images/preview.jpg','businesses/07-pulse/images/feature-1.jpg','businesses/07-pulse/images/feature-2.jpg','businesses/07-pulse/images/social.jpg'],
+    file:'businesses/07-pulse/Crypto-Twitter-Mastery-Pack.html'
   },
   {
-    id: 'forge',
-    name: 'FORGE',
-    tagline: 'Notion project management OS for builders. Sprint planning, async collab, shipping.',
-    price: '$22',
-    tag: 'Notion Template',
-    tagColor: '#fb923c',
-    tagBg: 'rgba(251,146,60,0.1)',
-    images: ['businesses/08-forge/images/cover.jpg','businesses/08-forge/images/preview.jpg','businesses/08-forge/images/feature-1.jpg','businesses/08-forge/images/feature-2.jpg','businesses/08-forge/images/social.jpg'],
-    file: null
+    id:'forge', name:'FORGE', price:'$22',
+    tagline:'Notion project OS for builders. Sprint planning, async collab, ship faster.',
+    tag:'Notion Template', tagColor:'#fb923c', tagBg:'rgba(251,146,60,0.1)',
+    images:['businesses/08-forge/images/cover.jpg','businesses/08-forge/images/preview.jpg','businesses/08-forge/images/feature-1.jpg','businesses/08-forge/images/feature-2.jpg','businesses/08-forge/images/social.jpg'],
+    file:null
   }
 ];
 
-const grid = document.getElementById('grid');
+// LIGHTBOX STATE
+let lbImages = [], lbIdx = 0;
+const lb = document.getElementById('lb');
+const lbImg = document.getElementById('lb-img');
+const lbCounter = document.getElementById('lb-counter');
+
+function openLb(images, idx) {
+  lbImages = images; lbIdx = idx;
+  lbImg.src = images[idx];
+  lbCounter.textContent = (idx+1) + ' / ' + images.length;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function lbStep(dir) {
+  lbIdx = (lbIdx + dir + lbImages.length) % lbImages.length;
+  lbImg.src = lbImages[lbIdx];
+  lbCounter.textContent = (lbIdx+1) + ' / ' + lbImages.length;
+}
+document.getElementById('lb-close').onclick = () => { lb.classList.remove('open'); document.body.style.overflow = ''; };
+document.getElementById('lb-prev').onclick = () => lbStep(-1);
+document.getElementById('lb-next').onclick = () => lbStep(1);
+lb.addEventListener('click', e => { if (e.target === lb) { lb.classList.remove('open'); document.body.style.overflow = ''; } });
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'ArrowLeft') lbStep(-1);
+  if (e.key === 'ArrowRight') lbStep(1);
+  if (e.key === 'Escape') { lb.classList.remove('open'); document.body.style.overflow = ''; }
+});
+
+// PREVIEW MODAL
 const modal = document.getElementById('modal');
-const modalClose = document.getElementById('modal-close');
 const modalTitle = document.getElementById('modal-title');
-const modalNewtab = document.getElementById('modal-newtab');
+const modalNew = document.getElementById('modal-new');
 const modalIframe = document.getElementById('modal-iframe');
-const modalLoading = document.getElementById('modal-loading');
+const modalSpinner = document.getElementById('modal-spinner');
+
+function openModal(p) {
+  modalTitle.textContent = p.name;
+  modalNew.href = p.file;
+  modalSpinner.classList.remove('gone');
+  modalIframe.src = p.file;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() { modal.classList.remove('open'); modalIframe.src = ''; document.body.style.overflow = ''; }
+document.getElementById('modal-close').onclick = closeModal;
+modalIframe.onload = () => modalSpinner.classList.add('gone');
+
+// BUILD CARDS
+const grid = document.getElementById('grid');
 
 products.forEach(p => {
   const card = document.createElement('div');
   card.className = 'card';
-  if (!p.file) card.style.opacity = '0.7';
 
-  const imgs = p.images || [];
-  const imgsHtml = imgs.map(src => `<img src="${src}" alt="${p.name}" loading="lazy">`).join('');
+  // carousel
+  const imgsHtml = p.images.map((src, i) =>
+    `<img src="${src}" alt="${p.name} ${i+1}" onerror="this.style.display='none'">`
+  ).join('');
+  const dotsHtml = p.images.map((_,i) =>
+    `<div class="dot${i===0?' on':''}" data-i="${i}"></div>`
+  ).join('');
 
   card.innerHTML = `
-    <div class="card-gallery">
-      <div class="card-gallery-track" data-gallery="${p.id}">${imgsHtml}</div>
-      <div class="gallery-dots">${imgs.map((_,i) => `<div class="gallery-dot${i===0?' active':''}" data-idx="${i}" data-gallery="${p.id}"></div>`).join('')}</div>
+    <div class="carousel">
+      <div class="carousel-track">${imgsHtml}</div>
+      <button class="carousel-btn carousel-prev">‹</button>
+      <button class="carousel-btn carousel-next">›</button>
+      <div class="carousel-dots">${dotsHtml}</div>
     </div>
     <div class="card-body">
       <div class="card-top">
@@ -414,73 +338,37 @@ products.forEach(p => {
       <p class="card-tagline">${p.tagline}</p>
       <div class="card-footer">
         <span class="card-tag" style="color:${p.tagColor};background:${p.tagBg}">${p.tag}</span>
-        <span class="card-cta">${p.file ? 'Preview →' : 'Coming soon'}</span>
+        <span class="card-cta ${p.file?'':'dim'}">${p.file?'Preview content →':'Coming soon'}</span>
       </div>
     </div>
   `;
 
-  // Gallery drag scroll
-  const track = card.querySelector('.card-gallery-track');
-  let isDragging = false, startX = 0, scrollLeft = 0;
-  track.addEventListener('mousedown', e => {
-    isDragging = true; startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft;
-    track.classList.add('grabbing');
-  });
-  track.addEventListener('mouseleave', () => { isDragging = false; track.classList.remove('grabbing'); });
-  track.addEventListener('mouseup', () => { isDragging = false; track.classList.remove('grabbing'); });
-  track.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - track.offsetLeft;
-    track.scrollLeft = scrollLeft - (x - startX) * 1.5;
-  });
+  // carousel logic
+  let cur = 0;
+  const track = card.querySelector('.carousel-track');
+  const dots = card.querySelectorAll('.dot');
 
-  // Update dots on scroll
-  track.addEventListener('scroll', () => {
-    const idx = Math.round(track.scrollLeft / track.offsetWidth);
-    card.querySelectorAll('.gallery-dot').forEach((d,i) => d.classList.toggle('active', i === idx));
-  });
+  function goTo(n) {
+    cur = (n + p.images.length) % p.images.length;
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    dots.forEach((d,i) => d.classList.toggle('on', i===cur));
+  }
 
-  // Dot click
-  card.querySelectorAll('.gallery-dot').forEach(dot => {
-    dot.addEventListener('click', e => {
-      e.stopPropagation();
-      const idx = parseInt(dot.dataset.idx);
-      track.scrollTo({ left: idx * track.offsetWidth, behavior: 'smooth' });
-    });
-  });
+  card.querySelector('.carousel-prev').onclick = e => { e.stopPropagation(); goTo(cur-1); };
+  card.querySelector('.carousel-next').onclick = e => { e.stopPropagation(); goTo(cur+1); };
+  dots.forEach(d => d.addEventListener('click', e => { e.stopPropagation(); goTo(parseInt(d.dataset.i)); }));
 
-  // Card click opens modal (only if has file)
+  // click image = lightbox
+  track.addEventListener('click', () => openLb(p.images, cur));
+  track.style.cursor = 'zoom-in';
+
+  // click CTA = preview modal
   if (p.file) {
-    card.style.cursor = 'pointer';
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('.card-gallery-track') && isDragging) return;
-      openModal(p);
-    });
+    card.querySelector('.card-cta').addEventListener('click', e => { e.stopPropagation(); openModal(p); });
   }
 
   grid.appendChild(card);
 });
-
-function openModal(p) {
-  modalTitle.textContent = p.name + ' — ' + p.tagline.split('.')[0];
-  modalNewtab.href = p.file;
-  modalLoading.classList.remove('gone');
-  modalIframe.src = p.file;
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  modal.classList.remove('open');
-  modalIframe.src = '';
-  document.body.style.overflow = '';
-}
-
-modalClose.addEventListener('click', closeModal);
-modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-modalIframe.addEventListener('load', () => modalLoading.classList.add('gone'));
 </script>
 </body>
 </html>
