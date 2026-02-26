@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLOW — Community Growth Bible</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0F0A2E;
+    --purple: #2D1B69;
+    --coral: #FF6B6B;
+    --amber: #FFB347;
+    --lavender: #C3A6FF;
+    --cream: #FFF8F0;
+    --muted: #A89CC8;
+    --mint: #4ECDC4;
+    --surface: #1A1040;
+    --border: #2D1B69;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1A1040 0%, #0F0A2E 100%);
+    border-bottom: 2px solid var(--coral);
+    padding: 56px 60px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: 'FLOW';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 300px;
+    font-weight: 900;
+    color: rgba(255,107,107,0.04);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -20px;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 1;
+  }
+  .brand { font-size: 80px; font-weight: 900; letter-spacing: -5px; line-height: 1; color: var(--coral); }
+  .brand-sub { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+  .header-meta {
+    text-align: right;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 2.2;
+  }
+  .header-meta .hl { color: var(--amber); }
+  .header-desc {
+    font-size: 18px;
+    color: var(--cream);
+    max-width: 680px;
+    line-height: 1.7;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+    padding-left: 20px;
+    border-left: 3px solid var(--coral);
+  }
+  .phase-pills {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .phase-pill {
+    background: var(--purple);
+    border: 1px solid rgba(255,107,107,0.4);
+    color: var(--cream);
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .phase-pill span { color: var(--coral); }
+  /* SECTION */
+  .section { border-bottom: 1px solid var(--border); }
+  .section-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 60px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .phase-badge {
+    background: var(--coral);
+    color: #fff;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .phase-badge.p2 { background: var(--amber); color: #1A1040; }
+  .phase-badge.p3 { background: var(--mint); color: #0F0A2E; }
+  .phase-badge.tools { background: var(--lavender); color: #1A1040; }
+  .section-title { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-left: auto; font-style: italic; }
+  .section-body { padding: 40px 60px; }
+  /* MINDSET BLOCK */
+  .mindset-block {
+    background: var(--purple);
+    border-left: 4px solid var(--coral);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    font-size: 16px;
+    color: var(--cream);
+    line-height: 1.8;
+    font-style: italic;
+  }
+  .mindset-block strong { color: var(--coral); font-style: normal; }
+  /* TACTIC CARDS */
+  .tactic-grid { display: flex; flex-direction: column; gap: 28px; }
+  .tactic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--coral);
+  }
+  .tactic.p2-card { border-top-color: var(--amber); }
+  .tactic.p3-card { border-top-color: var(--mint); }
+  .tactic-header {
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .tactic-num {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--coral);
+    opacity: 0.3;
+    line-height: 1;
+    flex-shrink: 0;
+    font-style: italic;
+  }
+  .tactic-num.p2 { color: var(--amber); }
+  .tactic-num.p3 { color: var(--mint); }
+  .tactic-name { font-size: 16px; font-weight: 900; letter-spacing: -0.3px; }
+  .tactic-body { padding: 20px 28px; }
+  .tactic-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+  /* CODE/TEMPLATE BLOCKS */
+  .template-block {
+    background: #070512;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--coral);
+    padding: 20px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    white-space: pre-line;
+    line-height: 1.9;
+    margin: 16px 0;
+    word-break: break-word;
+  }
+  .template-block.amber { border-left-color: var(--amber); }
+  .template-block .t-label { color: var(--coral); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .template-block .t-amber { color: var(--amber); }
+  .template-block .t-cream { color: var(--cream); }
+  .template-block .t-mint { color: var(--mint); }
+  /* CHANNEL STRUCTURE */
+  .channel-tree {
+    background: #070512;
+    border: 1px solid var(--border);
+    padding: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 2;
+    margin-bottom: 20px;
+  }
+  .channel-tree .ch-category { color: var(--lavender); font-weight: 700; }
+  .channel-tree .ch-channel { color: var(--cream); padding-left: 20px; }
+  .channel-tree .ch-note { color: var(--muted); font-style: italic; font-size: 11px; }
+  /* METRIC TABLES */
+  .metric-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px; }
+  .metric-table th { text-align: left; padding: 10px 16px; background: var(--purple); color: var(--amber); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 400; }
+  .metric-table td { padding: 12px 16px; border-bottom: 1px solid rgba(45,27,105,0.5); color: var(--muted); }
+  .metric-table td:first-child { color: var(--cream); }
+  .metric-table td.target { color: var(--mint); font-family: 'Courier New', monospace; font-weight: 700; }
+  .metric-table tr:hover td { background: rgba(255,107,107,0.03); }
+  /* CONTENT CALENDAR */
+  .cal-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+  .cal-table th { text-align: left; padding: 10px 14px; background: var(--purple); color: var(--lavender); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  .cal-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; font-size: 13px; }
+  .cal-table td:first-child { color: var(--amber); font-weight: 700; width: 100px; }
+  .cal-table tr:hover td { background: rgba(255,179,71,0.03); }
+  /* CHECKLIST */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .checklist li { display: flex; gap: 10px; font-size: 13px; color: var(--muted); }
+  .checklist li::before { content: '☐'; color: var(--coral); flex-shrink: 0; }
+  .checklist li.done::before { content: '✓'; color: var(--mint); }
+  /* DO/DON'T */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+  .do-block, .dont-block { background: var(--surface); border: 1px solid var(--border); padding: 20px; }
+  .do-block { border-top: 2px solid var(--mint); }
+  .dont-block { border-top: 2px solid var(--coral); }
+  .do-block h4 { color: var(--mint); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  .dont-block h4 { color: var(--coral); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  .do-item, .dont-item { font-size: 13px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid rgba(45,27,105,0.4); }
+  .do-item::before { content: '✓ '; color: var(--mint); }
+  .dont-item::before { content: '✕ '; color: var(--coral); }
+  /* ROLES */
+  .role-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .role-item { display: flex; gap: 12px; align-items: baseline; padding: 10px 16px; background: var(--surface); border: 1px solid var(--border); font-size: 13px; }
+  .role-emoji { flex-shrink: 0; font-size: 16px; }
+  .role-name { color: var(--lavender); font-weight: 700; width: 140px; flex-shrink: 0; }
+  .role-desc { color: var(--muted); }
+  /* MOD RULES */
+  .mod-rules { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--lavender); padding: 24px; margin: 16px 0; }
+  .mod-rules h4 { color: var(--lavender); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .mod-rule { display: flex; gap: 12px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
+  .mod-rule-num { color: var(--lavender); font-family: 'Courier New', monospace; flex-shrink: 0; }
+  /* NEWSLETTER */
+  .newsletter-block {
+    background: #070512;
+    border: 1px solid var(--border);
+    padding: 28px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 2;
+    color: var(--muted);
+    white-space: pre-line;
+    margin: 16px 0;
+  }
+  .newsletter-block .nl-header { color: var(--amber); font-size: 16px; font-weight: 700; }
+  .newsletter-block .nl-section { color: var(--coral); }
+  /* FOOTER */
+  .footer {
+    background: var(--purple);
+    border-top: 2px solid var(--coral);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-brand { font-size: 32px; font-weight: 900; color: var(--coral); letter-spacing: -2px; }
+  .footer-tagline { font-size: 13px; color: var(--muted); margin-top: 4px; font-style: italic; }
+  .footer-meta { font-size: 12px; color: var(--muted); text-align: right; line-height: 2.2; }
+  p.body-text { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 16px; }
+  .highlight { color: var(--coral); font-weight: 700; }
+  .amber-hl { color: var(--amber); font-weight: 700; }
+  @media (max-width: 768px) {
+    .header, .section-header, .section-body, .footer { padding-left: 20px; padding-right: 20px; }
+    .brand { font-size: 52px; }
+    .do-dont { grid-template-columns: 1fr; }
+    .header::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="brand">FLOW</div>
+      <div class="brand-sub">Build a community that can't stop talking about you.</div>
+    </div>
+    <div class="header-meta">
+      <span class="hl">Community Growth Bible</span><br>
+      The Playbook That Actually Works<br>
+      By <span class="hl">Sofia Ramos</span> · $47<br>
+      0 → 10,000 Members · 3 Phases
+    </div>
+  </div>
+  <p class="header-desc">"Most crypto community guides are written by people who've never actually built a community. Everything in here is specific. There are scripts, templates, exact schedules, numbers, and real tactics from real community builds."</p>
+  <div class="phase-pills">
+    <div class="phase-pill"><span>Phase 1</span> — 0 → 100 Members</div>
+    <div class="phase-pill"><span>Phase 2</span> — 100 → 1,000 Members</div>
+    <div class="phase-pill"><span>Phase 3</span> — 1,000 → 10,000 Members</div>
+  </div>
+</div>
+
+<!-- HOW TO USE -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge tools">How To Use</div>
+    <div class="section-title">Read This First</div>
+  </div>
+  <div class="section-body">
+    <div class="mindset-block">
+      This guide is split into three phases. Each phase covers what to focus on, what to avoid, specific tactics, scripts you can use today, metrics to track, and when to move to the next phase.<br><br>
+      <strong>Important:</strong> Don't skip phases. The mistake most founders make is jumping to Phase 3 tactics — paid growth, influencer deals, big events — before they've built the foundation. You'll get numbers but no engagement. You'll have 10,000 members and 12 daily active users.
+    </div>
+    <div class="tactic-grid">
+      <div class="tactic" style="border-top-color:var(--lavender);">
+        <div class="tactic-body">
+          <div class="tactic-desc"><strong style="color:var(--cream);">Community is the only moat in crypto that can't be forked.</strong> A competitor can copy your tokenomics. They can hire your developers. They can't steal your community's trust. That's why this work matters more than most founders realize — and why doing it wrong is so costly.</div>
+          <div class="do-dont">
+            <div class="do-block">
+              <h4>Community Done Right</h4>
+              <div class="do-item">Quality over quantity — always</div>
+              <div class="do-item">Respond to every message early on</div>
+              <div class="do-item">Reward genuine contribution</div>
+              <div class="do-item">Post real metrics consistently</div>
+              <div class="do-item">Name and thank individuals specifically</div>
+              <div class="do-item">Build culture before you scale it</div>
+            </div>
+            <div class="dont-block">
+              <h4>Community Done Wrong</h4>
+              <div class="dont-item">Buying Discord members</div>
+              <div class="dont-item">Empty channels everywhere</div>
+              <div class="dont-item">Ignoring bad behavior</div>
+              <div class="dont-item">Over-announcing every minor update</div>
+              <div class="dont-item">Fake urgency and FOMO tactics</div>
+              <div class="dont-item">Skipping phases for hype tactics</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge">Phase 1</div>
+    <div class="section-title">0 → 100 Members: The Foundation</div>
+    <div class="section-sub">You're not building a community yet. You're building a culture.</div>
+  </div>
+  <div class="section-body">
+
+    <div class="mindset-block">
+      At 0-100, every person who joins will define what your community becomes. They'll set the tone, establish the norms, and either attract or repel the next 900 people. <strong>Be more selective than you think you should be.</strong>
+    </div>
+
+    <h3 style="color:var(--coral); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:20px;">DISCORD SETUP — START WITH THIS STRUCTURE</h3>
+    <div class="channel-tree">
+<span class="ch-category">📢 ANNOUNCEMENTS</span>
+<span class="ch-channel">├── #announcements <span class="ch-note">(post-only)</span></span>
+<span class="ch-channel">└── #updates <span class="ch-note">(weekly update thread)</span></span>
+
+<span class="ch-category">💬 COMMUNITY</span>
+<span class="ch-channel">├── #general <span class="ch-note">(main chat)</span></span>
+<span class="ch-channel">├── #introductions <span class="ch-note">(new member intros)</span></span>
+<span class="ch-channel">└── #off-topic <span class="ch-note">(memes, vibe, casual)</span></span>
+
+<span class="ch-category">🔍 PROJECT</span>
+<span class="ch-channel">├── #about <span class="ch-note">(pinned info about your project)</span></span>
+<span class="ch-channel">├── #roadmap <span class="ch-note">(what you're building)</span></span>
+<span class="ch-channel">└── #faq <span class="ch-note">(pinned answers to common questions)</span></span>
+
+<span class="ch-category">💡 ALPHA</span>
+<span class="ch-channel">├── #research <span class="ch-note">(member-shared research)</span></span>
+<span class="ch-channel">└── #signals <span class="ch-note">(trading signals, discussion)</span></span>
+
+<span class="ch-category">🛠️ SUPPORT</span>
+<span class="ch-channel">└── #help <span class="ch-note">(questions, support tickets)</span></span>
+
+<span class="t-amber">Rule #1: Fewer channels, not more. An empty Discord with 20 channels feels like a ghost town.
+A Discord with 5 active channels feels alive. Add channels later. You cannot remove them without friction.</span></div>
+
+    <h3 style="color:var(--coral); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:20px; margin-top:32px;">PHASE 1 TACTICS</h3>
+    <div class="tactic-grid">
+
+      <div class="tactic">
+        <div class="tactic-header">
+          <div class="tactic-num">1</div>
+          <div class="tactic-name">Manual Outreach — Yes, Manual</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Your first 50 members should be hand-invited. Not spam blasted. Go through your personal network on Twitter, relevant Discord servers, Reddit communities (r/CryptoCurrency, r/ethfinance, niche subreddits), Telegram groups, and LinkedIn. Engage genuinely first. Mention your project second.</div>
+          <div class="template-block">
+<span class="t-label">// The DM That Works</span>
+Hey [NAME], I saw your [tweet/post/comment] about [TOPIC] — really good take.
+
+I'm building [ONE SENTENCE ABOUT PROJECT]. We just opened our Discord and I'm being selective about who I invite early — looking for people who care about [NICHE].
+
+Would you be interested in joining? Zero spam, no hype BS, just a small group of people working through this stuff seriously.
+
+[DISCORD LINK]</div>
+          <div class="tactic-desc"><strong class="highlight">What doesn't work:</strong> Mass DMs with no personalization. Don't do it.</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-header">
+          <div class="tactic-num">2</div>
+          <div class="tactic-name">The Founding Member Program</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Create a "Founding Member" role for your first 100 members. Give them a special Discord role with a unique badge, their name in your founding members shoutout post, early access to features, and the feeling of being part of something before it was big.</div>
+          <div class="template-block">
+<span class="t-label">// Founding Member Announcement</span>
+🌱 FOUNDING MEMBER PROGRAM
+
+The first 100 people to join [PROJECT] Discord and introduce themselves get the 🏆 Founding Member role — forever.
+
+This role comes with:
+→ Exclusive channels and early alpha
+→ Permanent recognition as a builder of this community
+→ Snapshot eligibility for future token events
+
+Only 100 spots. Join before they're gone.
+
+[DISCORD LINK]</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-header">
+          <div class="tactic-num">3</div>
+          <div class="tactic-name">Be Visibly Active</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">For the first 2 weeks, someone from your team must respond to EVERY message in your Discord within 2 hours. Every single one. This is non-negotiable at this stage. It signals: <em style="color:var(--cream);">"Real people built this. They care."</em> Nothing kills an early community faster than unanswered messages.</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-header">
+          <div class="tactic-num">4</div>
+          <div class="tactic-name">The Daily Thread</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Every day in #general, post a conversation starter. Not an announcement. A question. These generate conversation, help you understand your audience, and give new members something to engage with immediately.</div>
+          <div class="template-block">
+<span class="t-label">// Daily Thread Examples</span>
+"What's one protocol you've been impressed by this week and why?"
+"Unpopular opinion time: which L1 is actually overrated?"
+"What's your biggest mistake in crypto that you'd warn others about?"
+"If you had to put your entire portfolio into one token for 2 years, what would it be?"
+"Name a project that died that you still think had a good idea."
+"What would make you move your liquidity tomorrow?"</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-header">
+          <div class="tactic-num">5</div>
+          <div class="tactic-name">Phase 1 Twitter Setup</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Set this up before inviting anyone. Your Twitter presence is the first thing most people will check.</div>
+          <div class="template-block">
+<span class="t-label">// Twitter Bio Template</span>
+Building [what you're building] on [chain] 🌊
+[One sharp benefit statement]
+[Social proof or traction if you have it]
+[Specific audience callout]
+Discord 👇</div>
+          <div class="tactic-desc" style="margin-top:12px;"><strong class="amber-hl">Content mix:</strong> 40% Educational · 30% Behind the scenes · 20% Engagement · 10% Community highlights<br><strong class="amber-hl">Don't launch yet.</strong> Build an audience interested in your niche. When you do launch, they'll be warm.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 style="color:var(--coral); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:20px; margin-top:36px;">TEMPLATES — COPY THESE TODAY</h3>
+
+    <div class="template-block">
+<span class="t-label">// Welcome Message (Auto-sent via MEE6)</span>
+👋 Welcome to [PROJECT NAME], [USERNAME]!
+
+You've just joined [1-line description of what your project does].
+
+<span class="t-cream">Get started:</span>
+📌 Read #about to understand what we're building
+🙋 Introduce yourself in #introductions
+💬 Jump into #general — we don't bite
+
+<span class="t-cream">Quick rules:</span>
+✅ Be respectful. Be curious. Add value.
+❌ No spam, no scams, no shilling other projects
+❌ No DM soliciting — report it and we'll ban immediately
+
+Questions? Drop them in #help.
+
+Glad you're here. 🌊</div>
+
+    <div class="template-block">
+<span class="t-label">// #introductions Pinned Message</span>
+Introduce yourself! Here's a template to get started:
+
+👋 <span class="t-cream">Name/Handle:</span> 
+🌍 <span class="t-cream">Where you're from:</span> 
+💼 <span class="t-cream">What you do:</span> 
+🔮 <span class="t-cream">What brought you to [PROJECT]:</span> 
+🤙 <span class="t-cream">What you're hoping to find here:</span> 
+
+We read every intro. Welcome!</div>
+
+    <div class="template-block">
+<span class="t-label">// Community Rules (Pin These)</span>
+1. Be human. Treat everyone here like a real person you respect.
+2. No spam. No unsolicited links, no repeated messages, no channel flooding.
+3. No scams. If you DM someone to sell them something, you're gone. Forever.
+4. Do your own research. Nothing shared here is financial advice.
+5. No FUD without facts. Skepticism is fine. Baseless FUD is not.
+6. No shill zone. Don't promote other projects without permission.
+7. English in main channels. Translations welcome in your language's thread.
+8. Respect the mods. They're human. They make calls. Final is final.
+
+Breaking rules = warning → timeout → ban.</div>
+
+    <h3 style="color:var(--coral); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px; margin-top:32px;">PHASE 1 METRICS</h3>
+    <table class="metric-table">
+      <thead><tr><th>Metric</th><th>Target at 100 Members</th></tr></thead>
+      <tbody>
+        <tr><td>Discord members</td><td class="target">100 (real, not ghost accounts)</td></tr>
+        <tr><td>Daily active users</td><td class="target">20+ (20% of total)</td></tr>
+        <tr><td>Messages per day</td><td class="target">30+</td></tr>
+        <tr><td>Intro posts filled out</td><td class="target">60%+</td></tr>
+        <tr><td>Response time to questions</td><td class="target">&lt; 2 hours</td></tr>
+        <tr><td>Twitter followers</td><td class="target">200+</td></tr>
+        <tr><td>Twitter engagement rate</td><td class="target">3%+</td></tr>
+      </tbody>
+    </table>
+    <p class="body-text"><strong class="highlight">When to move to Phase 2:</strong> When you have 80+ real, engaged members and consistent daily conversation happening without you starting it.</p>
+
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge p2">Phase 2</div>
+    <div class="section-title">100 → 1,000 Members: The Engine</div>
+    <div class="section-sub">Members bring in other members. Community-led growth begins.</div>
+  </div>
+  <div class="section-body">
+
+    <div class="mindset-block" style="border-color:var(--amber);">
+      Phase 2 is about building the engine. You've proven the community can exist. Now you need to make it grow on its own. <strong>The goal: members bring in other members.</strong> Community-led growth is the most efficient marketing in crypto. When your members love the community, they talk about it. They share threads. They bring their friends.
+    </div>
+
+    <h3 style="color:var(--amber); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px;">DISCORD — PHASE 2 ADDITIONS</h3>
+    <div class="channel-tree">
+<span class="t-amber">Add these channels once daily conversation is consistent at 100+ members:</span>
+
+<span class="ch-channel">├── #price-talk <span class="ch-note">(isolate price discussion — don't let it flood #general)</span></span>
+<span class="ch-channel">├── #governance <span class="ch-note">(proposals, votes — if applicable)</span></span>
+<span class="ch-channel">├── #partnerships <span class="ch-note">(vetted community-submitted partner projects)</span></span>
+<span class="ch-channel">├── #community-calls <span class="ch-note">(announcements for voice calls, AMAs)</span></span>
+<span class="ch-channel">├── #media-kit <span class="ch-note">(logos, brand assets for community content creators)</span></span>
+<span class="ch-channel">└── 🌍 Regional sections for your top non-English communities</span></div>
+
+    <h3 style="color:var(--amber); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:20px; margin-top:32px;">PHASE 2 TACTICS</h3>
+    <div class="tactic-grid">
+
+      <div class="tactic p2-card">
+        <div class="tactic-header">
+          <div class="tactic-num p2">6</div>
+          <div class="tactic-name">The Community AMA</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Run your first AMA at ~200 members. This is a huge culture moment. Format: Voice channel in Discord, 45-60 minutes, text Q&A in a dedicated channel.</div>
+          <ul class="checklist">
+            <li>Announce 5 days in advance</li>
+            <li>Collect questions in advance in #ama-questions</li>
+            <li>Prepare 10 strong answers to likely questions</li>
+            <li>Have a moderator handle the queue</li>
+            <li>Record and share a text summary after</li>
+          </ul>
+          <div class="template-block amber">
+<span class="t-label">// AMA Announcement</span>
+🎙️ COMMUNITY AMA — [DATE & TIME]
+
+Got questions about what we're building, where we're going, or what the team is actually like?
+
+Join us this [DAY] at [TIME UTC] in the 🎤 Community Voice channel.
+
+Drop your questions in #ama-questions and the best ones get answered live.
+
+<span class="t-amber">This isn't a PR event. We'll answer the hard questions.</span>
+
+[Calendar link / Add to Google Calendar]</div>
+        </div>
+      </div>
+
+      <div class="tactic p2-card">
+        <div class="tactic-header">
+          <div class="tactic-num p2">7</div>
+          <div class="tactic-name">The Ambassador Program</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">At 300+ members, create an Ambassador Program. This formalizes what your best community members are already doing. Target: 5-10 Ambassadors by 1,000 members. They'll do more for your growth than most paid marketing.</div>
+          <div class="template-block amber">
+<span class="t-label">// Ambassador Application Template</span>
+AMBASSADOR APPLICATION
+
+Handle: 
+Discord username: 
+Twitter: 
+How long have you been in our community?
+Why do you want to be an Ambassador?
+What skills do you bring? (content, translation, dev, etc.)
+What's one thing you've already contributed?
+How many hours per week can you commit?</div>
+          <div class="tactic-desc" style="margin-top:12px;"><strong class="amber-hl">Ambassador benefits:</strong> Exclusive lounge channel · Early access to news · Official role · Token allocation/merch · Co-created content opportunities</div>
+        </div>
+      </div>
+
+      <div class="tactic p2-card">
+        <div class="tactic-header">
+          <div class="tactic-num p2">8</div>
+          <div class="tactic-name">Weekly Content Calendar</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Phase 2 requires consistency. Here's a weekly schedule that works:</div>
+          <h4 style="color:var(--amber); font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px;">DISCORD — WEEKLY</h4>
+          <table class="cal-table">
+            <thead><tr><th>Day</th><th>Channel</th><th>Content</th></tr></thead>
+            <tbody>
+              <tr><td>Monday</td><td>#general</td><td>Monday Motivation — relevant market insight or question</td></tr>
+              <tr><td>Tuesday</td><td>#research</td><td>Research deep-dive on a relevant topic (thread format)</td></tr>
+              <tr><td>Wednesday</td><td>#announcements</td><td>Weekly update from the team (what happened, what's next)</td></tr>
+              <tr><td>Thursday</td><td>#general</td><td>Throwback Thursday — a lesson or story from your journey</td></tr>
+              <tr><td>Friday</td><td>#general</td><td>Friday Alpha — one piece of useful signal for the community</td></tr>
+              <tr><td>Saturday</td><td>#off-topic</td><td>Community event: trivia, meme contest, or gaming session</td></tr>
+              <tr><td>Sunday</td><td>#community-calls</td><td>Weekly voice call (30 min) — what's on everyone's mind</td></tr>
+            </tbody>
+          </table>
+          <h4 style="color:var(--amber); font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; margin-top:20px;">TWITTER — WEEKLY</h4>
+          <table class="cal-table">
+            <thead><tr><th>Day</th><th>Type</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Monday</td><td>Educational thread</td><td>"5 things most people don't know about [your niche]"</td></tr>
+              <tr><td>Tuesday</td><td>Behind the scenes</td><td>"Here's what we shipped this week and what broke"</td></tr>
+              <tr><td>Wednesday</td><td>Engagement</td><td>Hot take / question / poll</td></tr>
+              <tr><td>Thursday</td><td>Community spotlight</td><td>RT an ambassador's content, highlight a community member</td></tr>
+              <tr><td>Friday</td><td>Alpha / signal</td><td>One thing you're watching this week and why</td></tr>
+              <tr><td>Weekend</td><td>Reply-heavy</td><td>Get in replies. Engage with others. Build relationships.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tactic p2-card">
+        <div class="tactic-header">
+          <div class="tactic-num p2">9</div>
+          <div class="tactic-name">The Weekly Update Thread</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Every Wednesday, post a structured update. This is one of the highest-leverage content habits you can build. It keeps the community informed, demonstrates progress, and creates accountability.</div>
+          <div class="template-block amber">
+<span class="t-label">// Weekly Update Template</span>
+📡 [PROJECT] WEEKLY UPDATE — Week [#]
+
+<span class="t-amber">SHIPPED THIS WEEK:</span>
+→ 
+→ 
+
+<span class="t-amber">WORKING ON:</span>
+→ 
+→ 
+
+<span class="t-amber">NUMBERS:</span>
+→ TVL: 
+→ Users: 
+→ Community: [X] Discord members | [X] Twitter followers
+
+<span class="t-amber">SPOTTED IN THE WILD:</span>
+→ (something cool from the broader ecosystem worth noting)
+
+<span class="t-amber">THIS WEEK'S QUESTION:</span>
+→ [Ask the community something]
+
+See you next week. 🌊</div>
+        </div>
+      </div>
+
+      <div class="tactic p2-card">
+        <div class="tactic-header">
+          <div class="tactic-num p2">10</div>
+          <div class="tactic-name">Partnership Collabs</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">At 300-500 members, start pursuing partnership collabs with complementary projects. Target: 2-3 partnerships per month in Phase 2. What to propose: co-hosted AMA, joint giveaway, cross-posting educational content, guest posts.</div>
+          <div class="template-block amber">
+<span class="t-label">// Partnership Outreach DM</span>
+Hey [NAME], huge fan of what you're building at [PROJECT].
+
+I run the community at [YOUR PROJECT] — we're at [X] Discord members and very aligned with your audience. Both of our communities are [describe overlap].
+
+Would you be open to a co-hosted AMA or community event? Both teams get in front of relevant new audiences, no budget needed.
+
+Let me know if you'd want to jump on a quick call.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 style="color:var(--amber); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px; margin-top:32px;">MODERATION GUIDE — PHASE 2</h3>
+    <div class="mod-rules">
+      <h4>Moderator Principles (Share with Your Mods)</h4>
+      <div class="mod-rule"><div class="mod-rule-num">1.</div><div>Always assume positive intent first. Most confusion is not malice.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num">2.</div><div>Enforce rules consistently. Inconsistency destroys trust more than any single bad actor.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num">3.</div><div>Never argue publicly with members. Handle escalations in DMs.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num">4.</div><div>When in doubt, consult the team before acting.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num">5.</div><div>Document everything in #mod-logs.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num">6.</div><div>Take breaks. Moderation is emotionally taxing. You're human.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num">7.</div><div>Your job is to protect the culture, not to control the conversation.</div></div>
+    </div>
+    <p class="body-text"><strong class="amber-hl">Ban policy:</strong> 1st offense = warning · 2nd = 24h timeout · 3rd = permanent ban · Spam/scam = immediate permanent ban, no warnings.</p>
+
+    <h3 style="color:var(--amber); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px; margin-top:32px;">RETENTION — TOP 5 TACTICS FOR PHASE 2</h3>
+    <div class="tactic-grid">
+      <div class="tactic p2-card" style="border-top-width:1px; padding:0;">
+        <div class="tactic-body">
+          <div class="tactic-desc">
+            <strong class="amber-hl">1. The 7-day check-in:</strong> When someone hasn't posted in 7 days, have a bot or mod send them a friendly DM. This reactivates ~15% of inactive members.<br><br>
+            <strong class="amber-hl">2. The contributor spotlight:</strong> Every week, feature a community member who did something great. Specific praise over generic recognition.<br><br>
+            <strong class="amber-hl">3. Progress updates:</strong> Share real metrics. When people feel like they're watching something grow, they stay.<br><br>
+            <strong class="amber-hl">4. Community events beyond AMAs:</strong> Weekly trivia, trading competitions, best portfolio screenshot contests, voice hangouts with no agenda.<br><br>
+            <strong class="amber-hl">5. Earn rewards:</strong> Give members ways to earn things for contributing — points, roles, access, allocations. Make contribution feel rewarding, not expected.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--amber); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px; margin-top:32px;">PHASE 2 METRICS</h3>
+    <table class="metric-table">
+      <thead><tr><th>Metric</th><th>Target at 1,000 Members</th></tr></thead>
+      <tbody>
+        <tr><td>Discord members</td><td class="target">1,000</td></tr>
+        <tr><td>Daily active users</td><td class="target">150+ (15%)</td></tr>
+        <tr><td>Messages per day</td><td class="target">200+</td></tr>
+        <tr><td>Weekly voice event attendance</td><td class="target">50+</td></tr>
+        <tr><td>Ambassador program members</td><td class="target">5+</td></tr>
+        <tr><td>Twitter followers</td><td class="target">2,000+</td></tr>
+        <tr><td>Partnership collabs run</td><td class="target">3+</td></tr>
+      </tbody>
+    </table>
+    <p class="body-text"><strong class="amber-hl">When to move to Phase 3:</strong> When you have organic growth happening without you driving it — new members from member referrals, content being shared unprompted, ambassadors actively representing you.</p>
+
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge p3">Phase 3</div>
+    <div class="section-title">1,000 → 10,000 Members: The Flywheel</div>
+    <div class="section-sub">Your job shifts from doing to enabling.</div>
+  </div>
+  <div class="section-body">
+
+    <div class="mindset-block" style="border-color:var(--mint);">
+      Phase 3 is the flywheel. If you've done Phase 1 and Phase 2 right, things start to compound. New members come in because the community has a reputation. Content gets shared because it's genuinely valuable. The community builds itself. <strong>Your job shifts: hire a dedicated community manager. Build systems. Create programs that run without you.</strong>
+    </div>
+
+    <h3 style="color:var(--mint); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px;">ROLE STRUCTURE — PHASE 3</h3>
+    <div class="role-list">
+      <div class="role-item"><div class="role-emoji">👑</div><div class="role-name">Core Team</div><div class="role-desc">Internal team only. Highest trust, full access.</div></div>
+      <div class="role-item"><div class="role-emoji">🌟</div><div class="role-name">Founding Member</div><div class="role-desc">Original 100 — keep this permanent. Never devalue it.</div></div>
+      <div class="role-item"><div class="role-emoji">💎</div><div class="role-name">Ambassador</div><div class="role-desc">Verified ambassadors. Early alpha access, strategy input channel.</div></div>
+      <div class="role-item"><div class="role-emoji">🔥</div><div class="role-name">Contributor</div><div class="role-desc">Active value-adders. Inner circle channel. Auto-assigned by activity metric.</div></div>
+      <div class="role-item"><div class="role-emoji">📈</div><div class="role-name">Active Member</div><div class="role-desc">Posted in last 30 days. Standard member access.</div></div>
+      <div class="role-item"><div class="role-emoji">🆕</div><div class="role-name">New Member</div><div class="role-desc">Default on join. Read-only in some channels until they introduce themselves.</div></div>
+    </div>
+
+    <h3 style="color:var(--mint); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:20px; margin-top:32px;">PHASE 3 TACTICS</h3>
+    <div class="tactic-grid">
+
+      <div class="tactic p3-card">
+        <div class="tactic-header">
+          <div class="tactic-num p3">11</div>
+          <div class="tactic-name">Community Newsletter</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">At 1,000+ members, launch a weekly community newsletter. Keeps members who aren't daily Discord users engaged. Creates a content asset you own (not platform-dependent). Recommended: Paragraph.xyz for on-chain flair, or Substack.</div>
+          <div class="newsletter-block">
+<span class="nl-header">THE FLOW LETTER — Week [#]</span>
+
+<span class="nl-section">👋 WHAT'S NEW</span>
+[2-3 sentences on the biggest update this week]
+
+<span class="nl-section">🔬 DEEP DIVE</span>
+[A longer piece on a relevant topic — original analysis or curated content]
+
+<span class="nl-section">🌟 COMMUNITY SPOTLIGHT</span>
+[Feature a member, ambassador, or contribution]
+
+<span class="nl-section">📊 THE NUMBERS</span>
+[Key metrics you're comfortable sharing publicly]
+
+<span class="nl-section">📅 WHAT'S COMING</span>
+[Events, launches, or content in the next week]
+
+<span class="nl-section">🤝 CONNECT</span>
+[Discord link | Twitter | Website]</div>
+        </div>
+      </div>
+
+      <div class="tactic p3-card">
+        <div class="tactic-header">
+          <div class="tactic-num p3">12</div>
+          <div class="tactic-name">Big Event Playbook</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc"><strong class="highlight">5 event types that work at 1K+ members:</strong></div>
+          <div class="tactic-desc">
+            <strong style="color:var(--mint);">1. Monthly Town Hall (AMA 2.0)</strong> — Full team on voice. Pre-submitted + live questions. Record for YouTube/podcast. Target: 200+ live attendees.<br><br>
+            <strong style="color:var(--mint);">2. Monthly Trading Competition</strong> — Partner with a DEX for prize pool. Leaderboard posted publicly. Target: 100+ participants.<br><br>
+            <strong style="color:var(--mint);">3. Community Research Report</strong> — Ambassadors collaborate on a research report. Community submits insights. Published publicly. Creates content, recognition, and depth signal.<br><br>
+            <strong style="color:var(--mint);">4. Twitter Spaces (2x/month)</strong> — Invite 1-2 guests from relevant projects. Promote 3 days in advance. Target: 300+ listeners.<br><br>
+            <strong style="color:var(--mint);">5. Governance Day (quarterly)</strong> — Structured community vote on a real decision. Announce result publicly. Explain how community input influenced it. Creates ownership feeling.
+          </div>
+        </div>
+      </div>
+
+      <div class="tactic p3-card">
+        <div class="tactic-header">
+          <div class="tactic-num p3">13</div>
+          <div class="tactic-name">KOL Strategy</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">At Phase 3, you have the credibility to approach Key Opinion Leaders properly. Build the relationship before asking for anything. Offer exclusive access or early alpha rather than just money. Co-create content rather than just getting a shoutout.</div>
+          <div class="template-block">
+<span class="t-label">// KOL Outreach Template</span>
+Hey [NAME],
+
+I've been following your content on [topic] for a while — your take on [specific recent piece] was one of the most useful things I read this month.
+
+I'm building [PROJECT] — [one sentence]. We're at [X] Discord members and [Y] Twitter followers. Our community is genuinely engaged — [specific proof: "our weekly AMAs get 300+ live attendees"].
+
+I'd love to explore a collab. Not a paid shill — actual co-created content on [topic both audiences care about]. You'd get [specific benefit], we'd get [specific benefit].
+
+No rush at all — just wanted to put it out there.</div>
+          <div class="tactic-desc" style="margin-top:12px;"><strong class="highlight">Rule:</strong> Find KOLs who genuinely align with your niche. Don't pay a meme KOL to shill a DeFi protocol.</div>
+        </div>
+      </div>
+
+      <div class="tactic p3-card">
+        <div class="tactic-header">
+          <div class="tactic-num p3">14</div>
+          <div class="tactic-name">Content Machine</div>
+        </div>
+        <div class="tactic-body">
+          <div class="tactic-desc">Phase 3 requires more content than one person can produce. Build systems:</div>
+          <div class="tactic-desc">
+            <strong style="color:var(--mint);">Community Content Program:</strong> Pay or reward members for creating content about your project. Set a template. Amplify the best from your main account.<br><br>
+            <strong style="color:var(--mint);">Thread Bank:</strong> A database of thread ideas, half-written threads, and past viral threads. Anyone on your team can pick one up.<br><br>
+            <strong style="color:var(--mint);">Media Kit:</strong> Public folder with logos, screenshots, graphics. Lower the friction for anyone wanting to write about you.<br><br>
+            <strong style="color:var(--mint);">Press / Research Page:</strong> Single page with key stats, team bios, and a media contact. One journalist covering you can bring hundreds of new members.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 style="color:var(--mint); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px; margin-top:32px;">RETENTION AT SCALE</h3>
+    <p class="body-text">At 10,000 members, active rate will naturally drop. Your goal isn't 100% engagement — it's a core of 500+ highly active members surrounded by thousands of warm ones.</p>
+    <div class="mod-rules" style="border-left-color:var(--mint);">
+      <h4 style="color:var(--mint);">Mental Models for Phase 3 Retention</h4>
+      <div class="mod-rule"><div class="mod-rule-num" style="color:var(--mint);">→</div><div><strong>Graduation events:</strong> When you hit milestones (2K, 5K, 10K), celebrate with community events. Make members feel like they built this.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num" style="color:var(--mint);">→</div><div><strong>Memory-making:</strong> The best communities have inside jokes and legendary moments. Be intentional about creating them. A controversial AMA, an unexpected announcement, a crazy trade that worked out.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num" style="color:var(--mint);">→</div><div><strong>Cross-platform visibility:</strong> Telegram for Asian markets. LinkedIn for institutional angles. Never fully abandon a platform — just distribute effort.</div></div>
+      <div class="mod-rule"><div class="mod-rule-num" style="color:var(--mint);">→</div><div><strong>The daily question:</strong> Every member is asking "why should I come back tomorrow?" Your job is to ensure tomorrow always has an answer.</div></div>
+    </div>
+
+    <h3 style="color:var(--mint); font-size:13px; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px; margin-top:32px;">PHASE 3 TEAM STRUCTURE</h3>
+    <div class="role-list">
+      <div class="role-item"><div class="role-emoji">💼</div><div class="role-name">Community Manager</div><div class="role-desc">Dedicated, paid, 20-40hrs/week. This is a professional function at this scale.</div></div>
+      <div class="role-item"><div class="role-emoji">🛡️</div><div class="role-name">Moderators (3-5)</div><div class="role-desc">Active, can be volunteer or lightly compensated. Clear escalation path to CM.</div></div>
+      <div class="role-item"><div class="role-emoji">💎</div><div class="role-name">Ambassadors (10+)</div><div class="role-desc">First line of culture defense. The face of the community online.</div></div>
+      <div class="role-item"><div class="role-emoji">✍️</div><div class="role-name">Content Contributors</div><div class="role-desc">Community members compensated for creating quality content about the project.</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <div class="footer-brand">FLOW</div>
+    <div class="footer-tagline">Build a community that can't stop talking about you.</div>
+  </div>
+  <div class="footer-meta">
+    Built by Sofia Ramos · $47<br>
+    3 Phases · 14 Tactics · 0 → 10,000 Members<br>
+    "Community is the only moat that can't be forked."
+  </div>
+</div>
+
+</body>
+</html>

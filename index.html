@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WJP Digital Products</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --border: #1e1e1e;
+    --border-hover: #333;
+    --text: #f0f0f0;
+    --muted: #666;
+    --accent: #6366f1;
+    --accent-glow: rgba(99,102,241,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-size: 15px; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-right {
+    font-size: 12px; color: var(--muted);
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 64px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800; letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 16px; color: var(--muted);
+    max-width: 480px; margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 40px;
+  }
+  .stat { text-align: center; }
+  .stat-n { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; }
+  .stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+  /* GRID */
+  .grid-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .card-cover {
+    width: 100%; aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    background: #1a1a1a;
+  }
+  .card-cover-placeholder {
+    width: 100%; aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; font-weight: 800; letter-spacing: -0.04em;
+  }
+  .card-body {
+    padding: 20px;
+  }
+  .card-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .card-name {
+    font-size: 15px; font-weight: 700; letter-spacing: -0.01em;
+  }
+  .card-price {
+    font-size: 14px; font-weight: 700;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 10px;
+    white-space: nowrap;
+  }
+  .card-tagline {
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .card-tag {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px; border-radius: 4px;
+  }
+  .card-cta {
+    font-size: 12px; color: var(--accent); font-weight: 600;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  /* VIEWER MODAL */
+  .modal-bg {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(4px);
+  }
+  .modal-bg.open { display: flex; flex-direction: column; }
+  .modal-bar {
+    height: 52px; flex-shrink: 0;
+    background: #111;
+    border-bottom: 1px solid #222;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 20px;
+  }
+  .modal-close {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: #1e1e1e; border: 1px solid #2a2a2a;
+    color: #ccc; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .modal-close:hover { background: #2a2a2a; color: #fff; }
+  .modal-title { font-size: 13px; font-weight: 600; flex: 1; }
+  .modal-newtab {
+    font-size: 12px; color: #4a9eff;
+    text-decoration: none; padding: 4px 10px;
+    border: 1px solid #1e3a5a; border-radius: 5px;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .modal-newtab:hover { background: #1e3a5a; }
+  .modal-iframe-wrap { flex: 1; overflow: hidden; position: relative; }
+  .modal-iframe-wrap iframe {
+    width: 100%; height: 100%; border: none; display: block;
+  }
+  .modal-loading {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #0d0d0d;
+    transition: opacity 0.3s;
+  }
+  .modal-loading.gone { opacity: 0; pointer-events: none; }
+  .spinner {
+    width: 22px; height: 22px;
+    border: 2px solid #222; border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#"><span>for</span> crypto</a>
+  <span class="nav-right">WJP · Digital Products</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Digital Products</div>
+  <h1>Everything you need<br>to win in Web3</h1>
+  <p>Templates, trackers, playbooks, and frameworks built for crypto-native creators.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">8</div><div class="stat-l">Products</div></div>
+    <div class="stat"><div class="stat-n">$174</div><div class="stat-l">Total Value</div></div>
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Previews</div></div>
+  </div>
+</div>
+
+<div class="grid-wrap">
+  <div class="section-label">All Products</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- VIEWER MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-bar">
+    <div class="modal-close" id="modal-close">✕</div>
+    <span class="modal-title" id="modal-title"></span>
+    <a class="modal-newtab" id="modal-newtab" href="#" target="_blank">Open in new tab ↗</a>
+  </div>
+  <div class="modal-iframe-wrap">
+    <iframe id="modal-iframe" src="" title="Product Preview"></iframe>
+    <div class="modal-loading" id="modal-loading"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<script>
+const products = [
+  {
+    id: 'vessel',
+    name: 'VESSEL',
+    tagline: 'Notion writing OS for creators. Capture, organize, publish — all in one system.',
+    price: '$22',
+    tag: 'Notion Template',
+    tagColor: '#4a9eff',
+    tagBg: 'rgba(74,158,255,0.1)',
+    cover: 'businesses/01-vessel/images/cover.jpg',
+    file: null
+  },
+  {
+    id: 'draft',
+    name: 'DRAFT',
+    tagline: '90 days of crypto content — 5 categories, 90 fill-in-the-blank templates.',
+    price: '$19',
+    tag: 'Content Templates',
+    tagColor: '#f5c518',
+    tagBg: 'rgba(245,197,24,0.1)',
+    cover: 'businesses/02-draft/images/cover.jpg',
+    file: 'businesses/02-draft/90-Days-of-Crypto-Content.html'
+  },
+  {
+    id: 'stack',
+    name: 'STACK',
+    tagline: '200+ crypto AI prompts organized by use case. Ship faster with better output.',
+    price: '$27',
+    tag: 'Prompt Library',
+    tagColor: '#a78bfa',
+    tagBg: 'rgba(167,139,250,0.1)',
+    cover: 'businesses/03-stack/images/cover.jpg',
+    file: 'businesses/03-stack/STACK-Prompt-Vault.html'
+  },
+  {
+    id: 'blueprint',
+    name: 'BLUEPRINT',
+    tagline: 'Full Web3 brand kit — color palettes, type pairings, logo worksheet, pitch deck.',
+    price: '$37',
+    tag: 'Brand Kit',
+    tagColor: '#c9a84c',
+    tagBg: 'rgba(201,168,76,0.1)',
+    cover: 'businesses/04-blueprint/images/cover.jpg',
+    file: 'businesses/04-blueprint/Web3-Brand-Starter-Kit.html'
+  },
+  {
+    id: 'ledger',
+    name: 'LEDGER',
+    tagline: 'Crypto portfolio tracker in Notion. Databases, views, journal, review templates.',
+    price: '$17',
+    tag: 'Notion Template',
+    tagColor: '#3ecf8e',
+    tagBg: 'rgba(62,207,142,0.1)',
+    cover: 'businesses/05-ledger/images/cover.jpg',
+    file: 'businesses/05-ledger/Crypto-Portfolio-Tracker.html'
+  },
+  {
+    id: 'flow',
+    name: 'FLOW',
+    tagline: 'Community growth playbook. 0 to 10K members with templates and scripts.',
+    price: '$29',
+    tag: 'Playbook',
+    tagColor: '#ff6b6b',
+    tagBg: 'rgba(255,107,107,0.1)',
+    cover: 'businesses/06-flow/images/cover.jpg',
+    file: 'businesses/06-flow/Community-Growth-Bible.html'
+  },
+  {
+    id: 'pulse',
+    name: 'PULSE',
+    tagline: '50 Crypto Twitter templates + full growth guide. Build the account, fast.',
+    price: '$24',
+    tag: 'Twitter Templates',
+    tagColor: '#4a9eff',
+    tagBg: 'rgba(74,158,255,0.1)',
+    cover: 'businesses/07-pulse/images/cover.jpg',
+    file: 'businesses/07-pulse/Crypto-Twitter-Mastery-Pack.html'
+  },
+  {
+    id: 'forge',
+    name: 'FORGE',
+    tagline: 'Notion project management OS for builders. Sprint planning, async collab, shipping.',
+    price: '$22',
+    tag: 'Notion Template',
+    tagColor: '#fb923c',
+    tagBg: 'rgba(251,146,60,0.1)',
+    cover: 'businesses/08-forge/images/cover.jpg',
+    file: null
+  }
+];
+
+const grid = document.getElementById('grid');
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modal-close');
+const modalTitle = document.getElementById('modal-title');
+const modalNewtab = document.getElementById('modal-newtab');
+const modalIframe = document.getElementById('modal-iframe');
+const modalLoading = document.getElementById('modal-loading');
+
+products.forEach(p => {
+  const card = document.createElement(p.file ? 'a' : 'div');
+  card.className = 'card';
+  if (!p.file) card.style.opacity = '0.6';
+
+  const coverHtml = `<img class="card-cover" src="${p.cover}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="card-cover-placeholder" style="display:none;color:${p.tagColor}">${p.name}</div>`;
+
+  card.innerHTML = `
+    ${coverHtml}
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-name">${p.name}</span>
+        <span class="card-price">${p.price}</span>
+      </div>
+      <p class="card-tagline">${p.tagline}</p>
+      <div class="card-footer">
+        <span class="card-tag" style="color:${p.tagColor};background:${p.tagBg}">${p.tag}</span>
+        <span class="card-cta">${p.file ? 'Preview →' : 'Coming soon'}</span>
+      </div>
+    </div>
+  `;
+
+  if (p.file) {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(p);
+    });
+  }
+
+  grid.appendChild(card);
+});
+
+function openModal(p) {
+  modalTitle.textContent = p.name + ' — ' + p.tagline.split('.')[0];
+  modalNewtab.href = p.file;
+  modalLoading.classList.remove('gone');
+  modalIframe.src = p.file;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  modalIframe.src = '';
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+modalIframe.addEventListener('load', () => modalLoading.classList.add('gone'));
+</script>
+</body>
+</html>

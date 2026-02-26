@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PULSE — Crypto Twitter Mastery Pack</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080B12;
+    --surface: #0D1526;
+    --surface2: #122040;
+    --blue: #00A3FF;
+    --cyan: #00E5FF;
+    --steel: #7BA7C7;
+    --white: #FFFFFF;
+    --yellow: #FFEE00;
+    --red: #FF3D57;
+    --border: #1A2E50;
+    --glow: rgba(0, 163, 255, 0.08);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .mono { font-family: 'Courier New', Courier, monospace; }
+  /* SCANLINE EFFECT */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,163,255,0.01) 2px, rgba(0,163,255,0.01) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* HEADER */
+  .header {
+    position: relative;
+    z-index: 1;
+    background: var(--surface);
+    border-bottom: 2px solid var(--blue);
+    padding: 52px 64px 44px;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .brand {
+    font-family: 'Courier New', monospace;
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: -3px;
+    color: var(--blue);
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(0,163,255,0.3);
+  }
+  .brand-sub { font-size: 13px; letter-spacing: 5px; text-transform: uppercase; color: var(--steel); margin-top: 8px; font-family: 'Courier New', monospace; }
+  .header-meta { text-align: right; font-family: 'Courier New', monospace; font-size: 12px; color: var(--steel); line-height: 2.2; }
+  .header-meta .hl { color: var(--cyan); }
+  .header-desc { font-size: 16px; color: var(--steel); max-width: 600px; line-height: 1.7; }
+  .header-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 28px; }
+  .stat-box { background: var(--bg); border: 1px solid var(--border); border-left: 2px solid var(--blue); padding: 12px 20px; }
+  .stat-box .stat-val { font-family: 'Courier New', monospace; font-size: 22px; color: var(--blue); font-weight: 700; display: block; }
+  .stat-box .stat-label { font-size: 11px; color: var(--steel); letter-spacing: 1px; }
+  /* SECTION */
+  .section { border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
+  .section-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 64px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .section-tag {
+    background: var(--blue);
+    color: var(--bg);
+    padding: 4px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .section-tag.op { background: var(--red); }
+  .section-tag.ed { background: var(--cyan); color: var(--bg); }
+  .section-tag.gr { background: var(--yellow); color: var(--bg); }
+  .section-tag.growth { background: var(--steel); color: var(--bg); }
+  .section-title { font-family: 'Courier New', monospace; font-size: 18px; font-weight: 700; color: var(--white); }
+  .section-count { margin-left: auto; font-family: 'Courier New', monospace; font-size: 12px; color: var(--steel); }
+  .section-body { padding: 40px 64px; }
+  /* HOW TO USE */
+  .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .how-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--blue); padding: 20px; }
+  .how-card h4 { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .how-card p { font-size: 13px; color: var(--steel); line-height: 1.6; }
+  /* TEMPLATE CARDS */
+  .template-group { margin-bottom: 48px; }
+  .group-label { font-family: 'Courier New', monospace; font-size: 12px; color: var(--blue); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .template-list { display: flex; flex-direction: column; gap: 20px; }
+  .tmpl-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .tmpl-card:hover { border-color: var(--blue); background: var(--glow); }
+  .tmpl-card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .tmpl-id { font-family: 'Courier New', monospace; font-size: 11px; color: var(--blue); letter-spacing: 1px; flex-shrink: 0; }
+  .tmpl-name { font-size: 14px; font-weight: 700; color: var(--white); }
+  .tmpl-desc { font-size: 12px; color: var(--steel); margin-left: auto; font-style: italic; }
+  .tmpl-body { padding: 20px; }
+  .tweet-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .tweet {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--steel);
+    line-height: 1.7;
+    position: relative;
+    white-space: pre-line;
+    word-break: break-word;
+  }
+  .tweet + .tweet { border-top: none; }
+  .tweet:last-child { border-left: 1px solid var(--border); }
+  .tweet .tweet-label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: var(--blue);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+    opacity: 0.7;
+  }
+  .tweet .tw-hl { color: var(--white); }
+  .tweet .tw-cyan { color: var(--cyan); }
+  .tweet .tw-yellow { color: var(--yellow); }
+  .tweet .tw-fill { color: var(--cyan); font-style: italic; }
+  .tweet-hook {
+    border-left: 3px solid var(--blue);
+  }
+  .tweet-cta { border-left: 3px solid var(--yellow); }
+  .tweet-connector {
+    width: 2px;
+    height: 8px;
+    background: var(--border);
+    margin-left: 28px;
+  }
+  .usage-note {
+    font-size: 12px;
+    color: var(--steel);
+    background: rgba(0,163,255,0.04);
+    border-left: 2px solid var(--blue);
+    padding: 10px 14px;
+    margin-top: 12px;
+  }
+  .usage-note strong { color: var(--blue); }
+  /* CONDENSED TEMPLATES */
+  .condensed-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .cond-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; }
+  .cond-id { font-family: 'Courier New', monospace; font-size: 10px; color: var(--blue); letter-spacing: 2px; margin-bottom: 8px; }
+  .cond-name { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+  .cond-hook { background: var(--bg); border-left: 2px solid var(--blue); padding: 10px 14px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--steel); margin-bottom: 10px; line-height: 1.6; }
+  .cond-builds { font-size: 12px; color: var(--steel); line-height: 1.6; }
+  .cond-builds span { color: var(--cyan); }
+  /* GROWTH GUIDE */
+  .growth-section { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--yellow); padding: 28px; margin-bottom: 24px; }
+  .growth-section h3 { font-family: 'Courier New', monospace; font-size: 12px; color: var(--yellow); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .growth-section p { font-size: 14px; color: var(--steel); line-height: 1.7; margin-bottom: 12px; }
+  .rule-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .rule-list li { display: flex; gap: 12px; font-size: 13px; color: var(--steel); }
+  .rule-list li::before { content: '→'; color: var(--blue); flex-shrink: 0; }
+  .hooks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
+  .hook-pattern { background: var(--bg); border: 1px solid var(--border); padding: 14px; }
+  .hook-pattern h4 { font-family: 'Courier New', monospace; font-size: 10px; color: var(--cyan); letter-spacing: 2px; margin-bottom: 8px; }
+  .hook-pattern p { font-family: 'Courier New', monospace; font-size: 12px; color: var(--white); line-height: 1.6; }
+  .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+  .sched-card { background: var(--bg); border: 1px solid var(--border); padding: 16px; }
+  .sched-freq { font-family: 'Courier New', monospace; font-size: 10px; color: var(--blue); letter-spacing: 3px; margin-bottom: 8px; }
+  .sched-card ul { list-style: none; }
+  .sched-card ul li { font-size: 12px; color: var(--steel); padding: 3px 0; }
+  .sched-card ul li::before { content: '· '; color: var(--blue); }
+  .sell-tactics { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .sell-tactic { background: var(--bg); border: 1px solid var(--border); padding: 16px; }
+  .sell-tactic h4 { font-family: 'Courier New', monospace; font-size: 11px; color: var(--yellow); letter-spacing: 2px; margin-bottom: 8px; }
+  .sell-tactic p { font-size: 13px; color: var(--steel); line-height: 1.6; }
+  .sell-tactic code { font-family: 'Courier New', monospace; color: var(--cyan); font-size: 12px; }
+  /* CHECKLIST */
+  .checklist-section { background: var(--surface2); border: 1px solid var(--border); border-top: 2px solid var(--cyan); padding: 28px; }
+  .checklist-section h3 { font-family: 'Courier New', monospace; font-size: 12px; color: var(--cyan); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
+  .check-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+  .check-group h4 { font-family: 'Courier New', monospace; font-size: 11px; color: var(--blue); letter-spacing: 2px; margin-bottom: 12px; }
+  .check-item { display: flex; gap: 10px; font-size: 13px; color: var(--steel); margin-bottom: 8px; }
+  .check-item::before { content: '☐'; color: var(--blue); flex-shrink: 0; }
+  /* FOOTER */
+  .footer {
+    background: var(--surface);
+    border-top: 2px solid var(--blue);
+    padding: 40px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-brand { font-family: 'Courier New', monospace; font-size: 28px; font-weight: 700; color: var(--blue); letter-spacing: -1px; text-shadow: 0 0 20px rgba(0,163,255,0.3); }
+  .footer-tagline { font-family: 'Courier New', monospace; font-size: 13px; color: var(--steel); margin-top: 4px; }
+  .footer-meta { font-family: 'Courier New', monospace; font-size: 11px; color: var(--steel); text-align: right; line-height: 2.2; }
+  @media (max-width: 768px) {
+    .header, .section-header, .section-body, .footer { padding-left: 20px; padding-right: 20px; }
+    .brand { font-size: 48px; }
+    .hooks-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="brand">PULSE</div>
+      <div class="brand-sub">// Say something worth following.</div>
+    </div>
+    <div class="header-meta">
+      <span class="hl">Crypto Twitter Mastery Pack</span><br>
+      50 Thread Templates + Growth Guide<br>
+      By <span class="hl">Jae Park</span> · $37<br>
+      0 → 45K followers in 14 months
+    </div>
+  </div>
+  <p class="header-desc">Your first tweet is an ad for the next one. Your whole thread is an ad for your profile. These 50 templates are the system that built mine. Use them, customize them, make them yours.</p>
+  <div class="header-stats">
+    <div class="stat-box"><span class="stat-val">50</span><span class="stat-label">Thread Templates</span></div>
+    <div class="stat-box"><span class="stat-val">5</span><span class="stat-label">Content Categories</span></div>
+    <div class="stat-box"><span class="stat-val">5</span><span class="stat-label">Growth Guide Sections</span></div>
+    <div class="stat-box"><span class="stat-val">45K</span><span class="stat-label">Followers Built With This System</span></div>
+  </div>
+</div>
+
+<!-- HOW TO USE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-tag">Setup</div>
+    <div class="section-title">How To Use This Pack</div>
+  </div>
+  <div class="section-body">
+    <div class="how-grid">
+      <div class="how-card">
+        <h4>Fill the Brackets</h4>
+        <p>Every template uses <span style="color:var(--cyan); font-family:'Courier New',monospace;">[BRACKETS]</span> for fill-in-the-blanks. Replace everything. Be specific — specificity is credibility. Generic fill-ins produce generic threads.</p>
+      </div>
+      <div class="how-card">
+        <h4>Hook First</h4>
+        <p>Tweet 1 is always the hook. It determines 80% of your reach. If it doesn't stop someone mid-scroll, nothing else matters. Read Section 2 of the Growth Guide on viral hooks before using any template.</p>
+      </div>
+      <div class="how-card">
+        <h4>Make It Personal</h4>
+        <p>The best threads feel personal. Customize the brackets with specific, concrete details from your own experience. A template filled with real data outperforms original content filled with vague claims.</p>
+      </div>
+      <div class="how-card">
+        <h4>Read the Growth Guide</h4>
+        <p>Templates without strategy are just words. Read the Growth Guide (Sections 1-5) before posting. It covers posting schedule, engagement tactics, how to go viral, and how to turn followers into buyers.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION A: ALPHA THREADS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-tag">Alpha</div>
+    <div class="section-title">Section A — Alpha Threads</div>
+    <div class="section-count">10 Templates · A-01 through A-10</div>
+  </div>
+  <div class="section-body">
+    <p style="color:var(--steel); font-size:14px; margin-bottom:24px; line-height:1.7;">Alpha threads share exclusive insight, hidden data, or information most people don't have. <span style="color:var(--blue);">These get saved and shared most.</span> Lead with discovery. End with implication.</p>
+
+    <div class="template-list">
+
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">A-01</div>
+          <div class="tmpl-name">The "I Found Something" Thread</div>
+          <div class="tmpl-desc">Hook: counterintuitive discovery</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">I spent [TIME PERIOD] analyzing [DATA SOURCE/PLATFORM].</span>
+
+What I found about [TOPIC] is something most people are completely missing.
+
+Here's the alpha: 🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>First, some context.
+
+[TOPIC] is widely misunderstood because [COMMON MISCONCEPTION].
+
+Most people think [WRONG ASSUMPTION].
+
+The reality is very different.</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3</span>The data shows [SPECIFIC FINDING #1].
+
+This matters because [WHY IT MATTERS TO READER].
+
+[Optional: link to data source or screenshot description]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 4</span>Going deeper: [SPECIFIC FINDING #2].
+
+Compare this to [BASELINE/COMPARISON].
+
+That's [X times] more/less than what most people assume.</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>The implication for [READER TYPE — e.g., "traders" / "holders" / "builders"] is:
+
+→ [IMPLICATION 1]
+→ [IMPLICATION 2]
+→ [IMPLICATION 3]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 6</span>Most people will ignore this because [REASON MOST MISS IT].
+
+That's the opportunity.
+
+The window to act on this is [TIME FRAME — be specific or honest if unknown].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 7 — CTA</span>If you found this useful, follow me [@HANDLE] — I post this kind of analysis every [FREQUENCY].
+
+And RT the first tweet if you think others should see this.</div>
+          </div>
+          <div class="usage-note"><strong>Usage:</strong> Best for data-driven discoveries. The specificity of the finding determines the engagement. "I found something" only works if what you found is actually interesting.</div>
+        </div>
+      </div>
+
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">A-02</div>
+          <div class="tmpl-name">The On-Chain Signal</div>
+          <div class="tmpl-desc">Hook: specific on-chain data pattern</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">Something interesting just showed up on-chain for [TOKEN/PROTOCOL].</span>
+
+When this pattern appeared before, [WHAT HAPPENED NEXT].
+
+It's happening again. 🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>[PROTOCOL/TOKEN] has [METRIC — e.g., "seen whale accumulation"] at [SPECIFIC DATA POINT].
+
+Last time this happened was [DATE/TIMEFRAME].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3</span>What followed: [WHAT HAPPENED IN PREVIOUS INSTANCE].
+
+Price moved [X]% in [TIMEFRAME].
+
+I'm not saying it'll happen again. I'm saying it's worth watching.</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 4</span>Here's why this signal matters:
+
+[PROTOCOL/MECHANISM EXPLANATION — why this on-chain metric is meaningful]
+
+It means [SPECIFIC INTERPRETATION].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>The counterargument: [REASON THIS MIGHT NOT PLAY OUT THE SAME WAY].
+
+Fair point. Here's why I still think it's notable: [YOUR RESPONSE].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 6</span>How I'm using this information:
+→ [WHAT YOU'RE DOING / WATCHING]
+→ [What would change your view]
+→ [What level/condition would confirm or deny]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 7 — CTA</span>I share signals like this when I find them.
+
+Follow [@HANDLE] and turn on notifications if you don't want to miss the next one.</div>
+          </div>
+          <div class="usage-note"><strong>Usage:</strong> Link to the on-chain explorer showing the data. The transparency makes it credible. Never claim you "know" — position it as something worth watching.</div>
+        </div>
+      </div>
+
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">A-03</div>
+          <div class="tmpl-name">The Hidden Protocol</div>
+          <div class="tmpl-desc">Hook: project most people haven't heard of</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">Most of CT hasn't heard of [PROJECT NAME] yet.</span>
+
+In [TIMEFRAME], I think that changes.
+
+Here's why [X] people are quietly accumulating: 🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>[PROJECT NAME] is solving [PROBLEM].
+
+The existing solutions are [EXISTING SOLUTIONS] and they have these problems:
+→ [PROBLEM 1]
+→ [PROBLEM 2]
+
+[PROJECT NAME]'s approach is different: [ONE LINE].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3</span>The numbers that caught my attention:
+
+→ TVL/Volume/Users: [METRIC]
+→ Growth rate: [METRIC]
+→ Fully diluted valuation: [FDV]
+→ MC/FDV ratio: [RATIO]
+
+[INTERPRETATION: what these numbers tell you]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 4</span>The team: [BRIEF TEAM DESCRIPTION].
+
+Background: [KEY CREDENTIALS without being a fanboy].
+
+Red flags I checked for: [WHAT YOU LOOKED AT — tokenomics, vesting, team doxxed?]
+
+Findings: [HONEST ASSESSMENT].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>The risks (being fair):
+
+→ [RISK 1]
+→ [RISK 2]
+→ [RISK 3]
+
+I'm not ignoring these. They're why this isn't a larger position for me.</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 6</span>My thesis in one sentence: [YOUR THESIS — be specific].
+
+Time horizon: [TIMEFRAME].
+
+Conditions that would invalidate this: [WHAT WOULD MAKE YOU WRONG].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 7 — CTA</span>Not financial advice. Do your own research.
+
+Links for research:
+→ [WEBSITE]
+→ [DOCS/WHITEPAPER]
+→ [TWITTER]
+
+Follow [@HANDLE] — I post setups like this when I find them.</div>
+          </div>
+          <div class="usage-note"><strong>Usage:</strong> Acknowledging risks in Tweet 5 is what makes everything else credible. Pure bullish threads with no risks read as shilling. Balanced analysis builds trust.</div>
+        </div>
+      </div>
+
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">A-04</div>
+          <div class="tmpl-name">The Narrative Play</div>
+          <div class="tmpl-desc">Hook: emerging narrative spotted early</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">There's a narrative building in crypto that almost nobody is talking about yet.</span>
+
+By the time CT catches on, the easy money will be gone.
+
+Here's what I'm seeing: 🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>The narrative: [NARRATIVE NAME/CONCEPT].
+
+What it means: [EXPLAIN IN ONE PARAGRAPH — plain language].
+
+Why now: [CATALYST OR TIMING DRIVER].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3</span>The evidence:
+
+→ [DATA POINT 1 that supports narrative building]
+→ [DATA POINT 2]
+→ [DATA POINT 3 — protocol launches, VC funding, regulatory news, developer activity]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 4</span>Historical parallel: the closest thing I've seen was [PREVIOUS NARRATIVE — e.g., "DeFi summer 2020"].
+
+What happened then: [BRIEF].
+
+Key difference this time: [HOW THIS IS DIFFERENT / BETTER / WORSE].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>The protocols positioned to benefit most:
+
+1. [PROJECT A] — because [REASON]
+2. [PROJECT B] — because [REASON]
+3. [PROJECT C] — because [REASON]
+
+[This is research, not a buy list]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 6</span>The timeline I'm watching:
+
+→ [SHORT TERM: what confirms the narrative is developing]
+→ [MEDIUM TERM: what mainstreams it]
+→ [WHAT WOULD KILL THE NARRATIVE]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 7 — CTA</span>Follow me [@HANDLE] — I map narratives before they hit the mainstream.
+
+Save this thread and check back when the narrative develops.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">A-05</div>
+          <div class="tmpl-name">DeFi Deep Dive</div>
+          <div class="tmpl-desc">Hook: how a specific protocol actually works under the hood</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">I spent [TIME] reading through [PROTOCOL NAME]'s [DOCS/CODE/AUDIT].</span>
+
+Most people using it don't understand how it actually works.
+
+Here's what I found (including the risks nobody talks about): 🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>What [PROTOCOL] does on the surface:
+[SIMPLE DESCRIPTION — what users think it does]
+
+What it actually does:
+[DEEPER MECHANICS — what's happening under the hood]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3</span>The fee structure:
+→ Protocol takes [%] on [WHAT]
+→ LPs earn [%] on [WHAT]
+→ Token holders earn [%] on [WHAT — if applicable]
+
+Most users have no idea where these fees go.</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 4</span>Smart contract risk:
+
+→ Audit status: [AUDITED BY WHO / NOT AUDITED]
+→ TVL at risk: [$AMOUNT]
+→ Admin key: [MULTISIG? WHO HOLDS? TIMELOCK?]
+→ Oracle: [WHAT ORACLE, WHAT RISK]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>Tokenomics:
+→ Supply: [TOTAL / CIRCULATING]
+→ Inflation rate: [ANNUAL %]
+→ Vesting schedule: [WHO UNLOCKS WHEN]
+→ Value accrual: [HOW TOKEN BENEFITS FROM PROTOCOL GROWTH]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 6</span>My honest take:
+
+Strengths: [2-3 genuine strengths]
+Weaknesses: [2-3 genuine concerns]
+Would I use/hold it: [YOUR HONEST ANSWER AND WHY]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 7 — CTA</span>If you're using [PROTOCOL], make sure you understand what you're doing.
+
+Follow [@HANDLE] for more protocol breakdowns.</div>
+          </div>
+          <div class="usage-note"><strong>Usage:</strong> Protocol deep dives are the highest-trust content on CT. The more technical and accurate you are, the more valuable your account becomes over time.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONDENSED A-06 through A-10 -->
+    <h3 style="font-family:'Courier New',monospace; font-size:12px; color:var(--blue); letter-spacing:3px; text-transform:uppercase; margin:32px 0 16px;">ALPHA TEMPLATES A-06 THROUGH A-10 (CONDENSED)</h3>
+    <div class="condensed-grid">
+      <div class="cond-card">
+        <div class="cond-id">A-06 // THE CONTRARIAN DATA TAKE</div>
+        <div class="cond-name">When data contradicts popular belief</div>
+        <div class="cond-hook">Hook: "Everyone says [COMMON BELIEF]. The data says something completely different. Thread:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> The popular narrative → why it sounds reasonable → what the data actually shows → why the narrative persists → the correct mental model → what this means practically</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">A-07 // THE GAS/FEE ANALYSIS</div>
+        <div class="cond-name">How to save money on-chain — always gets engagement</div>
+        <div class="cond-hook">Hook: "I've saved [AMOUNT] in gas fees this year doing [X simple thing]. Most people are still paying 3-10x more than they need to."</div>
+        <div class="cond-builds"><span>Thread builds:</span> Basics most know but don't apply → your main tip (specific + technical) → the tools you use → advanced move → common mistakes → save this CTA</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">A-08 // THE AIRDROP PLAYBOOK</div>
+        <div class="cond-name">Specific airdrop farming strategy</div>
+        <div class="cond-hook">Hook: "[PROJECT NAME] hasn't announced a token yet. But based on [INDICATORS], one is coming. Here's how to farm it properly:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Why you think a token is coming → protocol overview + stats → step-by-step farm guide → pro optimization move → cost vs. expected reward → CTA with DYOR disclaimer</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">A-09 // THE L2 BREAKDOWN</div>
+        <div class="cond-name">Comparing L2s on specific metrics</div>
+        <div class="cond-hook">Hook: "I compared every major L2 on [SPECIFIC METRIC]. The results were surprising. Here's the full breakdown:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> L2s compared + methodology → metrics for each → winner on this metric and why → the surprise finding → important caveat on what wasn't measured → practical recommendation</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">A-10 // THE WHALE WALLET WATCH</div>
+        <div class="cond-name">What smart money is doing</div>
+        <div class="cond-hook">Hook: "I've been tracking [WALLET] that has been right [X times out of X]. They just moved [AMOUNT] into [TOKEN]. Here's what I see:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Wallet background + track record → historical moves + outcomes → this week's move → two interpretations (steelman both) → what to watch for next → how to track wallets yourself</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION B: OPINION THREADS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-tag op">Opinion</div>
+    <div class="section-title">Section B — Opinion Threads</div>
+    <div class="section-count">10 Templates · B-01 through B-10</div>
+  </div>
+  <div class="section-body">
+    <p style="color:var(--steel); font-size:14px; margin-bottom:24px; line-height:1.7;">Opinion threads share a strong perspective. <span style="color:var(--red);">Controversial enough to be interesting, reasoned enough to be credible.</span> These get the most replies and debate — which means the most reach.</p>
+
+    <div class="template-list">
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">B-01</div>
+          <div class="tmpl-name">The Unpopular Opinion</div>
+          <div class="tmpl-desc">Hook: state a position most disagree with</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">Unpopular opinion: [YOUR CONTRARIAN TAKE].</span>
+
+I'm prepared to defend this.
+
+🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>First, I acknowledge the common view: [WHAT MOST PEOPLE BELIEVE AND WHY IT'S NOT TOTALLY WRONG].
+
+It's not insane. Here's why people believe it: [STEELMAN THE OTHER SIDE].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3</span>Here's why I disagree: [YOUR MAIN ARGUMENT — be specific, not just "I think differently"].
+
+The key thing most people miss is [SPECIFIC POINT].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 4</span>Evidence supporting my view: [DATA, EXAMPLES, or HISTORICAL PARALLELS].
+
+You can check this yourself: [HOW TO VERIFY].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>The strongest counterargument to my position: [BEST OBJECTION].
+
+My response: [WHY YOU STILL HOLD YOUR VIEW].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 6</span>Prediction: within [TIMEFRAME], [WHAT YOU BELIEVE WILL HAPPEN].
+
+I'll come back and post an update.</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 7 — CTA</span>Disagree with me? Tell me where my logic breaks down.
+
+Agree? Follow [@HANDLE] for more takes that don't follow the consensus.</div>
+          </div>
+          <div class="usage-note"><strong>Usage:</strong> Steelmanning the opposition (Tweet 2) is what separates a credible opinion from a hot take. Don't skip it. The threads that generate the most engagement acknowledge the other side fairly before dismantling it.</div>
+        </div>
+      </div>
+
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">B-02</div>
+          <div class="tmpl-name">The Industry Critique</div>
+          <div class="tmpl-desc">Hook: what's wrong with something everyone accepts</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">There's something broken about [THING IN CRYPTO MOST ACCEPT AS NORMAL] and nobody seems to want to say it out loud.</span>
+
+So I will. 🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>Here's what I'm talking about: [DESCRIBE THE THING — be fair and specific].
+
+Why it matters: [WHO IT AFFECTS AND HOW].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3</span>The defenders of this will say: [BEST DEFENSE OF THE STATUS QUO].
+
+I get it. But here's the problem with that argument: [YOUR RESPONSE].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 4</span>The cost of accepting [PROBLEM]: [SPECIFIC NEGATIVE OUTCOMES — data if possible].
+
+This is the part nobody quantifies.</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>What a better version would look like: [CONSTRUCTIVE ALTERNATIVE].
+
+This isn't just criticism — here's what I'd do instead: [SPECIFIC PROPOSAL].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 6</span>The people with the power to change this are [WHO]. 
+
+Why they haven't: [HONEST ASSESSMENT OF INCENTIVES].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 7 — CTA</span>Thoughts? Push back or add to this.
+
+Follow [@HANDLE] if you'd rather think about crypto than just trade it.</div>
+          </div>
+          <div class="usage-note"><strong>Usage:</strong> Offer a constructive alternative in Tweet 5 or this reads as pure complaining. The accounts with real influence critique AND propose. Venting without solutions is just noise.</div>
+        </div>
+      </div>
+
+      <div class="tmpl-card">
+        <div class="tmpl-card-header">
+          <div class="tmpl-id">B-03</div>
+          <div class="tmpl-name">Why [TOKEN] Is Undervalued/Overvalued</div>
+          <div class="tmpl-desc">Hook: direct valuation take with reasoning</div>
+        </div>
+        <div class="tmpl-body">
+          <div class="tweet-thread">
+            <div class="tweet tweet-hook"><span class="tweet-label">// TWEET 1 — HOOK</span><span class="tw-hl">I think [TOKEN] is [massively undervalued / significantly overvalued] right now.</span>
+
+Here's my reasoning, backed by actual numbers: 🧵</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 2</span>Current metrics:
+→ Price: $[PRICE]
+→ Market cap: $[MC]
+→ FDV: $[FDV]
+→ Revenue/fees: $[REVENUE] per day
+→ P/E equivalent: [CALCULATION if applicable]</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 3 + 4</span>Why I think it's [UNDER/OVER]valued:
+
+[ARGUMENT 1 — specific and data-backed]
+[ARGUMENT 2]
+
+Comparable valuations:
+[COMPARABLE A] at [MC] does [METRIC]
+[COMPARABLE B] at [MC] does [METRIC]
+[TOKEN] does [METRIC] at [MC].
+
+The gap: [WHAT THE GAP IMPLIES].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet"><span class="tweet-label">// TWEET 5</span>The bear case (being fair): [WHY SOMEONE MIGHT DISAGREE].
+
+My response: [WHY YOU STILL HOLD YOUR VIEW].</div>
+            <div class="tweet-connector"></div>
+            <div class="tweet tweet-cta"><span class="tweet-label">// TWEET 6-7 — CTA</span>My expectation: [TOKEN] reaches $[TARGET] within [TIMEFRAME] if [CONDITIONS].
+
+Not financial advice. My PT, my reasoning.
+
+Disagree with my valuation? Show me the counterargument. Follow [@HANDLE] for more valuation work.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONDENSED B-04 through B-10 -->
+    <h3 style="font-family:'Courier New',monospace; font-size:12px; color:var(--red); letter-spacing:3px; text-transform:uppercase; margin:32px 0 16px;">OPINION TEMPLATES B-04 THROUGH B-10 (CONDENSED)</h3>
+    <div class="condensed-grid">
+      <div class="cond-card">
+        <div class="cond-id">B-04 // THE MARKET CYCLE TAKE</div>
+        <div class="cond-name">Where we are in the cycle and what it means</div>
+        <div class="cond-hook">Hook: "We're at [STAGE] of the crypto market cycle. Most people don't realize what this means for the next [TIMEFRAME]. Here's my read:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Your framework → evidence for your call (3+ indicators) → historical parallel → 3-scenario prediction (base/bear/bull) → how you're positioning → invite debate</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">B-05 // BUILDER VS. SPECULATOR</div>
+        <div class="cond-name">Philosophical take on crypto participation</div>
+        <div class="cond-hook">Hook: "There are two kinds of people in crypto: builders and speculators. Both are valid. But they need to stop pretending to be the other."</div>
+        <div class="cond-builds"><span>Thread builds:</span> Builder archetype (strengths + weaknesses) → speculator archetype (same) → the real problem → how they complement each other → your honest self-assessment → ask the audience</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">B-06 // THE VC vs. RETAIL DIVIDE</div>
+        <div class="cond-name">Why retail keeps losing to VCs — and how to stop</div>
+        <div class="cond-hook">Hook: "VCs and retail are playing completely different games in crypto. The sooner retail understands this, the better they'll do."</div>
+        <div class="cond-builds"><span>Thread builds:</span> How VC mechanics work → why tokens dump at launch → what retail can learn from VC playbooks → what VCs get wrong that retail understands better → how to use this knowledge to position smarter</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">B-07 // MY BIGGEST CRYPTO MISTAKE</div>
+        <div class="cond-name">Vulnerability thread — highest emotional engagement</div>
+        <div class="cond-hook">Hook: "I lost [AMOUNT / X%] in [TIMEFRAME] because I did something I knew I shouldn't do. I'm sharing this because most people won't."</div>
+        <div class="cond-builds"><span>Thread builds:</span> What you did → why (honest psychology) → what it cost → warning signs you ignored → the rule you now have → why others should hear this</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">B-08 // WHY BEAR MARKETS ARE GOOD</div>
+        <div class="cond-name">Reframe the bear — counterintuitive and shareable</div>
+        <div class="cond-hook">Hook: "I made more progress in the last bear market than in any bull. Here's the real reason why — and how to use the next one."</div>
+        <div class="cond-builds"><span>Thread builds:</span> What happens to the market (the good stuff) → what happens to you if you use the time right → specific things to do → examples of projects/people who used bear markets well → how to mentally reframe</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">B-09 // THE REGULATION TAKE</div>
+        <div class="cond-name">Regulation debate — always gets engagement</div>
+        <div class="cond-hook">Hook: "The regulation debate in crypto is almost entirely missing the point. Here's what actually matters:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> What most people get wrong → actual risk → actual opportunity → best-case scenario → what you should actually be worried about → your concrete take with specific prediction</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">B-10 // THE DEATH OF [NARRATIVE]</div>
+        <div class="cond-name">Narrative post-mortem — bold take with data</div>
+        <div class="cond-hook">Hook: "[NARRATIVE] is over. I know that's not what CT wants to hear. But the data is clear."</div>
+        <div class="cond-builds"><span>Thread builds:</span> What the narrative was → why it made sense → specific signals it's ending → what comes next → how to position for the transition → why the naysayers are wrong</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION C-E: REMAINING TEMPLATES CONDENSED -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-tag ed">Educational</div>
+    <div class="section-title">Sections C, D, E — Educational, Personal, Project Threads</div>
+    <div class="section-count">30 Templates · C-01 through E-10</div>
+  </div>
+  <div class="section-body">
+
+    <div class="group-label">SECTION C — EDUCATIONAL THREADS (C-01 through C-10)</div>
+    <p style="color:var(--steel); font-size:14px; margin-bottom:20px;">Educational threads teach something useful. Best for building long-term followers who trust you as an authority. These get saved more than any other type.</p>
+    <div class="condensed-grid">
+      <div class="cond-card">
+        <div class="cond-id">C-01 // BEGINNER'S GUIDE TO [CONCEPT]</div>
+        <div class="cond-name">Accessible entry point to complex topics</div>
+        <div class="cond-hook">Hook: "[CONCEPT] explained in plain English. No jargon. No assumptions. If you've been confused about this, this thread is for you."</div>
+        <div class="cond-builds"><span>Thread builds:</span> Why the concept exists → how it works step by step → concrete example with numbers → what this means for you specifically → common beginner mistake → further reading (free) → ask for questions in replies</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">C-02 // [NUMBER] THINGS I WISH I'D KNOWN</div>
+        <div class="cond-name">Lessons from experience — evergreen format</div>
+        <div class="cond-hook">Hook: "[NUMBER] things I wish someone had told me before I started [trading / using DeFi / investing in crypto]:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Each tweet = one lesson + 3-4 sentence expansion. Be specific — generic advice ("do your research") is worthless. Each lesson should feel like real advice from someone who learned it the hard way.</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">C-03 // HOW [PROTOCOL] ACTUALLY MAKES MONEY</div>
+        <div class="cond-name">Fee flow breakdown — demystifies revenue</div>
+        <div class="cond-hook">Hook: "How does [PROTOCOL] actually make money? And more importantly: does any of it flow to token holders? Thread:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Revenue sources → where fees go (protocol/LPs/holders breakdown) → how it compares to competitors → what this means for the token → sustainability assessment → conclusion</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">C-04 // THE COMPLETE GUIDE TO [TOPIC]</div>
+        <div class="cond-name">Definitive reference — people save these</div>
+        <div class="cond-hook">Hook: "The complete guide to [TOPIC]. Everything you need to know in one thread. Bookmark this."</div>
+        <div class="cond-builds"><span>Thread builds:</span> What it is → how it works → types/variations → how to use it practically → tools for doing it → mistakes to avoid → where to learn more. Pin this thread.</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">C-05 // SECURITY: HOW NOT TO GET REKT</div>
+        <div class="cond-name">Security guide — always relevant, always reshared</div>
+        <div class="cond-hook">Hook: "[NUMBER] wallet security mistakes I see crypto people make constantly. If you're making any of these, fix them today."</div>
+        <div class="cond-builds"><span>Thread builds:</span> Each mistake with the specific fix → hardware wallet setup → seed phrase storage → phishing recognition → approval revocation → social engineering red flags → what to do if compromised</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">C-06 through C-10 // ADDITIONAL EDUCATIONAL FORMATS</div>
+        <div class="cond-name">Remaining educational templates</div>
+        <div class="cond-hook">C-06: The On-Chain Reading Tutorial / C-07: The Tokenomics 101 / C-08: Understanding Liquidity Pools / C-09: How to Read a Smart Contract Audit / C-10: Crypto Tax Basics</div>
+        <div class="cond-builds"><span>Each follows the same structure:</span> Hook (specific pain point or knowledge gap) → core concept explained simply → worked example → practical application → tools/resources → CTA asking for follow and questions in replies</div>
+      </div>
+    </div>
+
+    <div class="group-label" style="margin-top:36px;">SECTION D — PERSONAL/STORY THREADS (D-01 through D-10)</div>
+    <p style="color:var(--steel); font-size:14px; margin-bottom:20px;">Personal threads build connection and trust. These are harder to write but convert followers to buyers at the highest rate. Vulnerability is a feature, not a bug.</p>
+    <div class="condensed-grid">
+      <div class="cond-card">
+        <div class="cond-id">D-01 // MY CRYPTO ORIGIN STORY</div>
+        <div class="cond-name">How you got started — builds connection</div>
+        <div class="cond-hook">Hook: "How I went from [STARTING STATE — e.g., "no idea what a blockchain was"] to [CURRENT STATE — e.g., "building in DeFi full-time"]. The honest version:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Where you started (be vulnerable) → the moment that changed things → early mistakes → first real win → what you learned → where you are now → invitation for their story</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">D-02 // MY PORTFOLIO REVIEW (TRANSPARENT)</div>
+        <div class="cond-name">Show your work — highest trust content</div>
+        <div class="cond-hook">Hook: "Monthly portfolio review. I'm sharing the actual numbers — wins, losses, and what I learned. January:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Portfolio breakdown (% allocation) → biggest winner + why → biggest loser + why → mistake you made → what you're changing → thesis going into next month. Never embellish. The honesty is the value.</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">D-03 // THE TRADE I'LL NEVER FORGET</div>
+        <div class="cond-name">Specific trade story — narrative format</div>
+        <div class="cond-hook">Hook: "The trade that [made me / cost me] $[AMOUNT] in [TIMEFRAME]. What I did, why, and what I'd do differently:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> The setup → why you took the trade → what happened → emotional journey (the real part) → what you lost or gained → the lesson → the rule you made afterward</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">D-04 // FROM [STATE] TO [STATE] IN [TIMEFRAME]</div>
+        <div class="cond-name">Transformation story — aspirational and viral</div>
+        <div class="cond-hook">Hook: "A year ago I [STARTING STATE — be honest about how bad it was]. Today: [CURRENT STATE]. Here's exactly what changed:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Specific starting state → the turning point → 3-5 specific changes you made → evidence of progress → what still hasn't changed (honesty) → advice for someone in your old position</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">D-05 through D-10 // ADDITIONAL PERSONAL FORMATS</div>
+        <div class="cond-name">Remaining personal templates</div>
+        <div class="cond-hook">D-05: My Research Process / D-06: Tools I Actually Use / D-07: Lessons From [X] Years in Crypto / D-08: My Investing Philosophy / D-09: What I Got Wrong This Year / D-10: The Books/Resources That Changed My Approach</div>
+        <div class="cond-builds"><span>Key principle:</span> Every personal thread should have a specific, concrete claim in the hook that promises the reader something useful. "Thoughts on the market" is not a hook. "I just did X and learned Y" is a hook.</div>
+      </div>
+    </div>
+
+    <div class="group-label" style="margin-top:36px;">SECTION E — PROJECT/BUILDER THREADS (E-01 through E-10)</div>
+    <p style="color:var(--steel); font-size:14px; margin-bottom:20px;">For founders, builders, and project accounts. These threads build product credibility and community without feeling like marketing.</p>
+    <div class="condensed-grid">
+      <div class="cond-card">
+        <div class="cond-id">E-01 // THE LAUNCH THREAD</div>
+        <div class="cond-name">How to announce something without it feeling like an ad</div>
+        <div class="cond-hook">Hook: "We've been building [PROJECT NAME] for [TIMEFRAME]. Today it's live. Here's what we built, why, and what it means for [TARGET AUDIENCE]:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> Origin story (why you built it) → the problem you lived personally → what you built → how it works in plain language → who it's for specifically → what's next → CTA with link</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">E-02 // THE WEEKLY BUILD LOG</div>
+        <div class="cond-name">Consistent progress thread — builds trust over time</div>
+        <div class="cond-hook">Hook: "[PROJECT] Week [NUMBER] build log. Shipped: [X]. Working on: [Y]. Broke: [Z]. Honest version:"</div>
+        <div class="cond-builds"><span>Key principle:</span> "Broke: [Z]" is the most important part. Building in public means sharing failures too. The projects that only share wins get dismissed as marketing. The ones that share the real journey build believers.</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">E-03 // THE TECHNICAL DECISION</div>
+        <div class="cond-name">Why you chose X over Y — builds developer respect</div>
+        <div class="cond-hook">Hook: "We had to choose between [OPTION A] and [OPTION B] for [PROJECT]. Here's how we made the decision — and what we'd do differently:"</div>
+        <div class="cond-builds"><span>Thread builds:</span> The decision and its stakes → option A (pros/cons) → option B (pros/cons) → what you chose and why → how it's working out → what you'd do differently → invite input from builders who've faced it</div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-id">E-04 through E-10 // ADDITIONAL PROJECT FORMATS</div>
+        <div class="cond-name">Remaining project templates</div>
+        <div class="cond-hook">E-04: The Founder's Thesis / E-05: Traction Thread / E-06: The Team Introduction / E-07: Behind the Smart Contract / E-08: The Roadmap Reveal / E-09: Lessons from [X] Months Building / E-10: The Community Gratitude Thread</div>
+        <div class="cond-builds"><span>Key principle:</span> Project threads perform best when they sound like a founder, not a marketing team. First-person, specific, honest. Show what you're learning, not just what you're selling.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GROWTH GUIDE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-tag gr">Growth Guide</div>
+    <div class="section-title">The Growth Guide — 5 Sections</div>
+    <div class="section-count">Strategy · Scheduling · Engagement · Virality · Monetization</div>
+  </div>
+  <div class="section-body">
+
+    <div class="growth-section">
+      <h3>Section 1 — Profile Optimization</h3>
+      <p>Your profile is your landing page. It either converts scrollers to followers or it doesn't. No amount of good threads will fix a bad profile.</p>
+      <p><strong style="color:var(--white);">Bio formula:</strong> [What you do] · [For whom] · [Proof or credential] · [What they'll get from following]</p>
+      <p><strong style="color:var(--white);">Pinned tweet rules:</strong> Pin your best thread (high engagement), your introduction thread, or a free resource. Never pin a random hot take or an old tweet that isn't relevant.</p>
+    </div>
+
+    <div class="growth-section">
+      <h3>Section 2 — Posting Schedule</h3>
+      <div class="schedule-grid">
+        <div class="sched-card">
+          <div class="sched-freq">DAILY · 30 MIN</div>
+          <ul>
+            <li>10 replies to accounts in your niche</li>
+            <li>1-2 standalone tweets (observation, question)</li>
+            <li>Engage with replies to your content</li>
+          </ul>
+        </div>
+        <div class="sched-card">
+          <div class="sched-freq">WEEKLY</div>
+          <ul>
+            <li>2-3 threads (use templates from Part 1)</li>
+            <li>1 quote tweet with your own analysis</li>
+            <li>1 question tweet for engagement</li>
+          </ul>
+        </div>
+        <div class="sched-card">
+          <div class="sched-freq">BEST TIMES · EST</div>
+          <ul>
+            <li>8-9 AM (morning commute)</li>
+            <li>12-1 PM (lunch break)</li>
+            <li>5-7 PM (post-work)</li>
+            <li>9-11 PM (late scrollers)</li>
+          </ul>
+        </div>
+        <div class="sched-card">
+          <div class="sched-freq">THREAD TIMING</div>
+          <ul>
+            <li>Post hook tweet, then rest within 15 min</li>
+            <li>Don't space them out</li>
+            <li>Algorithm treats it as one piece</li>
+            <li>Amplifies based on first-hour engagement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="growth-section">
+      <h3>Section 3 — Engagement Tactics</h3>
+      <ul class="rule-list">
+        <li><strong style="color:var(--white);">Add information, not just agreement.</strong> "Great take" does nothing. Add a specific point that extends the conversation.</li>
+        <li><strong style="color:var(--white);">Pick 10 accounts to be genuinely engaged with.</strong> Slightly larger than you, not untouchable. Consistent meaningful engagement gets noticed and gets you noticed.</li>
+        <li><strong style="color:var(--white);">Disagree publicly, politely.</strong> A thoughtful, specific disagreement in the replies of a large account gets enormous visibility. Never do it as a stunt — only when you genuinely disagree.</li>
+        <li><strong style="color:var(--white);">Quote tweet &gt; retweet.</strong> Retweeting adds nothing. Quote tweeting with your take adds value to both the original and your profile.</li>
+        <li><strong style="color:var(--white);">Build relationships, not just followers.</strong> DM people when their content helps you. Tag relevant people in your threads. Propose collabs after you've built real relationship.</li>
+      </ul>
+    </div>
+
+    <div class="growth-section">
+      <h3>Section 4 — How to Go Viral</h3>
+      <p><strong style="color:var(--white);">What "viral" actually means:</strong> A thread with 1,000 retweets is not the goal. 500 new followers who genuinely want your content is. Focus on follower quality, not vanity metrics.</p>
+      <h4 style="color:var(--yellow); font-size:11px; letter-spacing:2px; text-transform:uppercase; margin:16px 0 12px;">The 5 Hook Patterns That Work</h4>
+      <div class="hooks-grid">
+        <div class="hook-pattern">
+          <h4>Pattern 1 — The Counterintuitive Claim</h4>
+          <p>"[POPULAR BELIEF] is wrong. Here's the proof:"</p>
+        </div>
+        <div class="hook-pattern">
+          <h4>Pattern 2 — The Specific Promise</h4>
+          <p>"I found [SPECIFIC THING] that most people don't know about [TOPIC]. Thread:"</p>
+        </div>
+        <div class="hook-pattern">
+          <h4>Pattern 3 — The Story Opener</h4>
+          <p>"On [DATE], I [DRAMATIC THING HAPPENED]. Here's everything:"</p>
+        </div>
+        <div class="hook-pattern">
+          <h4>Pattern 4 — The Number</h4>
+          <p>"[NUMBER] [THINGS] you need to know about [TOPIC] before [URGENCY DRIVER]:"</p>
+        </div>
+        <div class="hook-pattern">
+          <h4>Pattern 5 — Earned Credibility</h4>
+          <p>"I've spent [TIME/EFFORT] analyzing [THING]. Here's what I found:"</p>
+        </div>
+      </div>
+      <h4 style="color:var(--red); font-size:11px; letter-spacing:2px; text-transform:uppercase; margin:20px 0 12px;">What Kills Threads</h4>
+      <ul class="rule-list">
+        <li>Weak hook — if tweet 1 doesn't stop the scroll, nothing else matters</li>
+        <li>Too long — most threads should be 6-8 tweets. 15+ loses people unless the topic demands it</li>
+        <li>No clear point — threads that meander get skimmed and abandoned</li>
+        <li>Generic fill-ins — using a template with vague phrases defeats the purpose</li>
+        <li>No call to action — not asking for the follow is leaving followers on the table</li>
+      </ul>
+    </div>
+
+    <div class="growth-section">
+      <h3>Section 5 — How to Turn Followers Into Buyers</h3>
+      <p><strong style="color:var(--white);">The rule:</strong> Never tweet about your product more than once every 10 tweets. Constant promotion destroys the trust that makes selling possible.</p>
+      <div class="sell-tactics">
+        <div class="sell-tactic">
+          <h4>Technique 1 — The Natural Mention</h4>
+          <p>"I break down exactly how I do [THING] in my [PRODUCT]. Here's the summary: [THREAD]. Full system in the link in bio."</p>
+        </div>
+        <div class="sell-tactic">
+          <h4>Technique 2 — The Outcome Mention</h4>
+          <p>"Someone used [PRODUCT] and shared their result: [SPECIFIC RESULT]. Still pinching myself."</p>
+        </div>
+        <div class="sell-tactic">
+          <h4>Technique 3 — The Social Proof Thread</h4>
+          <p>When you have 3+ testimonials: "I got [X messages] this week from people who [POSITIVE OUTCOME]. Here's what they said: [QUOTES]" — the thread sells your product without mentioning the product.</p>
+        </div>
+        <div class="sell-tactic">
+          <h4>Technique 4 — The Launch Thread</h4>
+          <p>When launching: one big push, properly structured (use E-01 template). One great launch thread beats 30 days of low-grade promotion.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIT CHECKLIST -->
+    <div class="checklist-section">
+      <h3>Profile Audit Checklist — Run This Before Posting Your First Thread</h3>
+      <div class="check-cols">
+        <div class="check-group">
+          <h4>Profile Setup</h4>
+          <div class="check-item">Clear, high-quality profile photo</div>
+          <div class="check-item">Bio answers "why should I follow this person?"</div>
+          <div class="check-item">Header image communicates value prop</div>
+          <div class="check-item">Display name is clean and readable</div>
+          <div class="check-item">Link in bio goes somewhere useful</div>
+          <div class="check-item">Pinned tweet is your best content</div>
+        </div>
+        <div class="check-group">
+          <h4>Content Preparation</h4>
+          <div class="check-item">First 5 threads planned (using templates)</div>
+          <div class="check-item">10 accounts identified to engage with daily</div>
+          <div class="check-item">Posting schedule set (minimum: 1 thread/week + daily replies)</div>
+          <div class="check-item">Content calendar for first 30 days</div>
+        </div>
+        <div class="check-group">
+          <h4>First 30 Days Goal</h4>
+          <div class="check-item">10 quality threads posted</div>
+          <div class="check-item">300 meaningful replies left</div>
+          <div class="check-item">10 genuine DMs sent to potential collab accounts</div>
+          <div class="check-item">500 new followers (realistic with consistent effort)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <div class="footer-brand">PULSE</div>
+    <div class="footer-tagline">// Say something worth following.</div>
+  </div>
+  <div class="footer-meta">
+    Built by Jae Park · $37<br>
+    50 Thread Templates · 5 Growth Sections<br>
+    0 → 45,000 followers in 14 months
+  </div>
+</div>
+
+</body>
+</html>

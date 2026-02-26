@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRAFT — 90 Days of Crypto Content</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #111111;
+    --yellow: #F5E642;
+    --white: #F0EFEB;
+    --gray: #888880;
+    --card: #1A1A1A;
+    --border: #2A2A2A;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  /* HEADER */
+  .header {
+    border-bottom: 3px solid var(--yellow);
+    padding: 48px 60px 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .header-left {}
+  .brand {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: -4px;
+    color: var(--yellow);
+    line-height: 1;
+    font-style: italic;
+  }
+  .tagline {
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .header-meta {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 2;
+  }
+  .header-meta span {
+    color: var(--white);
+  }
+  /* HERO */
+  .hero {
+    padding: 60px 60px 52px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-title {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    max-width: 700px;
+    margin-bottom: 24px;
+  }
+  .hero-title em {
+    color: var(--yellow);
+    font-style: normal;
+  }
+  .hero-desc {
+    font-size: 17px;
+    color: var(--gray);
+    max-width: 640px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pill {
+    display: inline-block;
+    border: 1px solid var(--yellow);
+    color: var(--yellow);
+    padding: 6px 16px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  /* HOW TO USE */
+  .section {
+    padding: 48px 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  .section-title {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+  .how-to-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+  }
+  .how-card {
+    background: var(--card);
+    border-left: 3px solid var(--yellow);
+    padding: 20px;
+  }
+  .how-card h4 {
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+  .how-card p {
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+  /* CATEGORY NAV */
+  .cat-nav {
+    padding: 32px 60px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cat-nav span {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-right: 8px;
+  }
+  .cat-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--gray);
+    padding: 8px 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: default;
+    transition: none;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .cat-btn:hover, .cat-btn.active {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(245,230,66,0.05);
+  }
+  /* CATEGORY SECTION */
+  .cat-section {
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-header {
+    padding: 36px 60px 24px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .cat-number {
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--yellow);
+    letter-spacing: -4px;
+    line-height: 1;
+    font-style: italic;
+    opacity: 0.4;
+  }
+  .cat-info h2 {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -1px;
+  }
+  .cat-info p {
+    font-size: 14px;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+  .templates-grid {
+    padding: 32px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .template-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .template-card:hover {
+    border-color: rgba(245,230,66,0.3);
+  }
+  .template-num {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--yellow);
+    font-weight: 700;
+    opacity: 0.6;
+  }
+  .template-card-header {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .template-name {
+    font-size: 15px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-right: 60px;
+  }
+  .template-body {
+    padding: 20px 24px;
+  }
+  .template-copy {
+    background: #0A0A0A;
+    border-left: 3px solid var(--yellow);
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.8;
+    white-space: pre-line;
+    margin-bottom: 16px;
+    word-break: break-word;
+  }
+  .template-usage {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .template-usage strong {
+    color: var(--white);
+    font-style: normal;
+  }
+  /* FOOTER */
+  .footer {
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-brand {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--yellow);
+    letter-spacing: -1px;
+    font-style: italic;
+  }
+  .footer-meta {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--gray);
+    text-align: right;
+    line-height: 2;
+  }
+  .bracket { color: var(--yellow); }
+  @media (max-width: 768px) {
+    .header, .hero, .section, .templates-grid, .cat-header, .cat-nav, .footer { padding-left: 24px; padding-right: 24px; }
+    .brand { font-size: 48px; }
+    .hero-title { font-size: 28px; }
+    .cat-number { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="brand">DRAFT</div>
+    <div class="tagline">Post something real.</div>
+  </div>
+  <div class="header-right">
+    <div class="header-meta">
+      <span>90 Days of Crypto Content</span><br>
+      Done-For-You Social Post Templates<br>
+      By <span>Priya Nair</span> · $39
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1 class="hero-title">90 templates.<br>Zero blank boxes.<br><em>Post something real.</em></h1>
+  <p class="hero-desc">You've built something real. Now post about it. We wrote 90 templates so you don't have to stare at a blank box. Replace the <span class="bracket">[BRACKETS]</span>, edit the tone, post.</p>
+  <div class="pill-row">
+    <div class="pill">20 Hype &amp; Launch</div>
+    <div class="pill">20 Education</div>
+    <div class="pill">20 Community</div>
+    <div class="pill">15 Market Commentary</div>
+    <div class="pill">15 Culture &amp; Meme</div>
+  </div>
+</div>
+
+<!-- HOW TO USE -->
+<div class="section">
+  <div class="section-label">// Before You Start</div>
+  <h2 class="section-title">How to use these templates</h2>
+  <div class="how-to-grid">
+    <div class="how-card">
+      <h4>Fill the Brackets</h4>
+      <p>Replace everything in <span class="bracket">[BRACKETS]</span> with your project's specifics. Be specific — specificity is credibility.</p>
+    </div>
+    <div class="how-card">
+      <h4>Edit the Tone</h4>
+      <p>These are drafts, not finished pieces. Adjust the voice to match yours. The goal is to eliminate the blank-page problem, not replace your voice.</p>
+    </div>
+    <div class="how-card">
+      <h4>Check the Usage Note</h4>
+      <p>Every template has a usage note with platform recommendations and timing guidance. Read it — they include when and where each format performs best.</p>
+    </div>
+    <div class="how-card">
+      <h4>Any Platform</h4>
+      <p>Templates work for Twitter/X, Farcaster, Lens, Telegram announcements, Discord, or any text-based social. Some include platform-specific notes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY NAV -->
+<div class="cat-nav">
+  <span>Jump to:</span>
+  <a class="cat-btn active" href="#cat1">Hype &amp; Launch</a>
+  <a class="cat-btn" href="#cat2">Education</a>
+  <a class="cat-btn" href="#cat3">Community</a>
+  <a class="cat-btn" href="#cat4">Market</a>
+  <a class="cat-btn" href="#cat5">Culture</a>
+</div>
+
+<!-- CATEGORY 1: HYPE & LAUNCH -->
+<div class="cat-section" id="cat1">
+  <div class="cat-header">
+    <div class="cat-number">01</div>
+    <div class="cat-info">
+      <h2>Hype &amp; Launch Posts</h2>
+      <p>20 templates for announcement moments, milestones, and momentum building</p>
+    </div>
+  </div>
+  <div class="templates-grid">
+
+    <div class="template-card">
+      <div class="template-num">001</div>
+      <div class="template-card-header"><div class="template-name">The Launch Drop</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] is live.
+
+[ONE LINE ON WHAT IT DOES.]
+
+[LINK]</div>
+        <div class="template-usage"><strong>Usage:</strong> Your most minimal launch post. Drop it first. Let the information breathe. Follow with the thread (see 002). Works on every platform.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">002</div>
+      <div class="template-card-header"><div class="template-name">The Launch Thread Opener</div></div>
+      <div class="template-body">
+        <div class="template-copy">We've been building [PROJECT NAME] for [TIMEFRAME].
+
+Today it's live.
+
+Here's what we built, why we built it, and what it means for [TARGET USER/COMMUNITY]. 🧵</div>
+        <div class="template-usage"><strong>Usage:</strong> Opens your launch thread. Thread should be 8-12 tweets. Use for the full announcement thread.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">003</div>
+      <div class="template-card-header"><div class="template-name">The Countdown</div></div>
+      <div class="template-body">
+        <div class="template-copy">[X] days until [EVENT/LAUNCH/DROP].
+
+If you've been watching: you already know.
+
+If you're new: [LINK TO LEARN MORE]</div>
+        <div class="template-usage"><strong>Usage:</strong> Post 3-7 days before a major event. Rewards the community that's been paying attention.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">004</div>
+      <div class="template-card-header"><div class="template-name">The Milestone Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[SPECIFIC NUMBER] [holders / users / transactions / members].
+
+We didn't celebrate [SMALLER MILESTONE] publicly. We're celebrating this one.
+
+Thank you.</div>
+        <div class="template-usage"><strong>Usage:</strong> When you hit a genuine milestone. Be specific about the number. Specificity is credibility.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">005</div>
+      <div class="template-card-header"><div class="template-name">The Partnership Tease</div></div>
+      <div class="template-body">
+        <div class="template-copy">Something we've been working on quietly.
+
+Next week: [VAGUE BUT GENUINE HINT].
+
+We don't tease things we haven't shipped. Mark your calendar.</div>
+        <div class="template-usage"><strong>Usage:</strong> 5-7 days before a partnership announcement. Builds anticipation without the empty hype.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">006</div>
+      <div class="template-card-header"><div class="template-name">The Feature Drop</div></div>
+      <div class="template-body">
+        <div class="template-copy">[FEATURE NAME] is live.
+
+What it does: [ONE SENTENCE]
+Why it matters: [ONE SENTENCE]
+How to use it: [LINK]
+
+Go.</div>
+        <div class="template-usage"><strong>Usage:</strong> Every product update gets its own post. Short and functional. Pin the thread if there's more to explain.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">007</div>
+      <div class="template-card-header"><div class="template-name">The Exchange/DEX Listing</div></div>
+      <div class="template-body">
+        <div class="template-copy">[$TICKER] is now live on [EXCHANGE/DEX NAME].
+
+For everyone who asked: [LINK]
+
+For everyone who already knew: you're welcome.</div>
+        <div class="template-usage"><strong>Usage:</strong> Exchange listings get their own post, not buried in a thread. Punchy, functional, no bloat.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">008</div>
+      <div class="template-card-header"><div class="template-name">The "We're Not Dead" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Quick update for anyone who's been watching quietly:
+
+[LIST OF THINGS SHIPPED IN LAST 30 DAYS — 3-5 items]
+
+We build in public. The lack of noise isn't silence — it's work.</div>
+        <div class="template-usage"><strong>Usage:</strong> Every 30-45 days if you've been heads-down. Combats the "rug or abandoned" fear.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">009</div>
+      <div class="template-card-header"><div class="template-name">The Community Milestone</div></div>
+      <div class="template-body">
+        <div class="template-copy">[NUMBER] people in [Discord/Telegram/etc].
+
+[NUMBER] of them were here before the launch.
+
+We see the OGs. You're not forgotten.</div>
+        <div class="template-usage"><strong>Usage:</strong> Shout out early adopters when you hit community size milestones. Loyalty is worth more than growth.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">010</div>
+      <div class="template-card-header"><div class="template-name">The Audit Announcement</div></div>
+      <div class="template-body">
+        <div class="template-copy">Our smart contract audit is complete.
+
+Audited by: [FIRM NAME]
+Date: [DATE]
+Result: [SUMMARY — e.g., "2 minor issues identified and resolved. No critical findings."]
+
+Full report: [LINK]
+
+Security isn't optional. It's the floor.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post this the moment the audit is complete. Transparency here builds more trust than 10 marketing posts.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">011</div>
+      <div class="template-card-header"><div class="template-name">The Treasury Update</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] treasury update — [MONTH/QUARTER]:
+
+Holdings: [AMOUNT]
+Deployed to: [USE OF FUNDS — 3 bullet points]
+Remaining runway: [TIMEFRAME]
+
+We manage this for the long term. Not the next 30 days.</div>
+        <div class="template-usage"><strong>Usage:</strong> Quarterly. Transparency about treasury is rare and builds serious trust.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">012</div>
+      <div class="template-card-header"><div class="template-name">The TGE Countdown (Final 24 Hours)</div></div>
+      <div class="template-body">
+        <div class="template-copy">24 hours.
+
+[$TICKER] TGE at [TIME] [TIMEZONE] on [DATE].
+
+Everything you need to know: [LINK]
+
+See you on the other side.</div>
+        <div class="template-usage"><strong>Usage:</strong> Final 24h before TGE. Short. No hype. Functional.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">013</div>
+      <div class="template-card-header"><div class="template-name">The Record High Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[$TICKER] just hit [PRICE/METRIC] for the first time.
+
+We're not going to do the rocket emoji thing.
+
+We'll just say: the people who were here early knew something. Congrats.</div>
+        <div class="template-usage"><strong>Usage:</strong> When price or key metric hits ATH. Restrained celebration is more credible than hype.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">014</div>
+      <div class="template-card-header"><div class="template-name">The Soft Launch (Testnet/Beta)</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] is live on [TESTNET/BETA].
+
+Limited access first. We're watching [SPECIFIC THINGS YOU'RE WATCHING].
+
+If you want in: [LINK]
+
+We ship when it's ready. It's almost ready.</div>
+        <div class="template-usage"><strong>Usage:</strong> Builds anticipation during testnet/beta phase. Invites early adopters to participate.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">015</div>
+      <div class="template-card-header"><div class="template-name">The Version 2 Announcement</div></div>
+      <div class="template-body">
+        <div class="template-copy">V2 is coming.
+
+What changes: [3-5 specific improvements]
+What stays the same: [1-2 core things that made V1 worth using]
+When: [DATE OR TIMEFRAME]
+
+We didn't rebuild for the sake of it. Every change has a reason.</div>
+        <div class="template-usage"><strong>Usage:</strong> Major version announcements. Frame around user benefit, not just "new features."</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">016</div>
+      <div class="template-card-header"><div class="template-name">The Governance Vote Launch</div></div>
+      <div class="template-body">
+        <div class="template-copy">Proposal [NUMBER] is live: [PROPOSAL TITLE]
+
+What it does: [ONE SENTENCE]
+Voting period: [DATES]
+Where to vote: [LINK]
+
+Your token means something. Use it.</div>
+        <div class="template-usage"><strong>Usage:</strong> Every governance vote gets its own post. Simple, functional, direct CTA.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">017</div>
+      <div class="template-card-header"><div class="template-name">The Collab/Crossover</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] x [PARTNER PROJECT].
+
+Here's what this means for [SHARED AUDIENCE]:
+→ [BENEFIT 1]
+→ [BENEFIT 2]
+→ [BENEFIT 3]
+
+Full details: [LINK]</div>
+        <div class="template-usage"><strong>Usage:</strong> Collaboration announcements. Lead with user benefit, not just name-dropping.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">018</div>
+      <div class="template-card-header"><div class="template-name">The App/Product Launch</div></div>
+      <div class="template-body">
+        <div class="template-copy">The [APP NAME] is live.
+
+[WHAT IT DOES — 2 sentences max]
+
+Available: [iOS / Android / Web / All]
+
+Download/Access: [LINK]</div>
+        <div class="template-usage"><strong>Usage:</strong> Product launches within your ecosystem. The link is the CTA. Let it do the work.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">019</div>
+      <div class="template-card-header"><div class="template-name">The Grant or Funding Announcement</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] received a [GRANT / INVESTMENT] from [SOURCE].
+
+Amount: [IF PUBLIC]
+Purpose: [WHAT IT FUNDS — specific, not vague]
+Timeline: [WHAT THIS MEANS FOR DELIVERY]
+
+We're building with more resources now. The work continues.</div>
+        <div class="template-usage"><strong>Usage:</strong> Grant/funding news. Specificity about what the money does is what makes this credible.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">020</div>
+      <div class="template-card-header"><div class="template-name">The Season/Chapter Launch</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] Season [NUMBER] begins [DATE].
+
+What's new:
+→ [ITEM 1]
+→ [ITEM 2]
+→ [ITEM 3]
+
+Season [PREVIOUS] gave us [SPECIFIC OUTCOME]. Season [CURRENT] goes further.
+
+[LINK]</div>
+        <div class="template-usage"><strong>Usage:</strong> For projects that operate in seasons/chapters — they create narrative arcs that drive long-term engagement.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CATEGORY 2: EDUCATION -->
+<div class="cat-section" id="cat2">
+  <div class="cat-header">
+    <div class="cat-number">02</div>
+    <div class="cat-info">
+      <h2>Education Posts</h2>
+      <p>20 templates for teaching your community about the space and your project</p>
+    </div>
+  </div>
+  <div class="templates-grid">
+
+    <div class="template-card">
+      <div class="template-num">021</div>
+      <div class="template-card-header"><div class="template-name">The "What Is [X]" Explainer</div></div>
+      <div class="template-body">
+        <div class="template-copy">[CONCEPT] explained in plain English:
+
+1. [FIRST PRINCIPLE — simplest possible explanation]
+2. [HOW IT WORKS — one mechanism]
+3. [WHY IT MATTERS — the real-world consequence]
+4. [HOW IT CONNECTS TO YOUR PROJECT]
+
+Most people in crypto skip step 1. That's why they're confused.</div>
+        <div class="template-usage"><strong>Usage:</strong> Weekly educational content. Pick one concept from your ecosystem and explain it simply. Consistently performs well as saves and shares.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">022</div>
+      <div class="template-card-header"><div class="template-name">The Common Misconception</div></div>
+      <div class="template-body">
+        <div class="template-copy">The most common misunderstanding about [PROJECT NAME / YOUR SECTOR]:
+
+"[THE MISCONCEPTION]"
+
+Here's what's actually true:
+
+[CLEAR CORRECTION — 3-5 sentences]
+
+If this clears something up: save it. Others have the same question.</div>
+        <div class="template-usage"><strong>Usage:</strong> Address FUD or confusion before it spreads. Saves are a stronger signal than likes.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">023</div>
+      <div class="template-card-header"><div class="template-name">The Comparison Thread</div></div>
+      <div class="template-body">
+        <div class="template-copy">[YOUR APPROACH] vs. [COMPETING APPROACH]
+
+People ask us about this constantly. Here's the honest breakdown:
+
+[YOUR APPROACH]:
+→ [STRENGTH 1]
+→ [STRENGTH 2]
+→ [WEAKNESS — acknowledge one]
+
+[COMPETING APPROACH]:
+→ [THEIR STRENGTH — be fair]
+→ [THEIR WEAKNESS — be specific]
+
+Neither is "better." The right choice depends on [FACTOR].</div>
+        <div class="template-usage"><strong>Usage:</strong> Be fair in comparisons. Your willingness to acknowledge competition's strengths signals confidence.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">024</div>
+      <div class="template-card-header"><div class="template-name">The 5-Minute Crash Course</div></div>
+      <div class="template-body">
+        <div class="template-copy">New to [PROJECT NAME]? 5-minute crash course:
+
+What we are: [ONE SENTENCE]
+The problem we solve: [ONE SENTENCE]
+How it works: [2-3 sentences]
+Who it's for: [ONE SENTENCE]
+Where to start: [LINK]
+
+Bookmark this. It's the fastest way to catch up.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post monthly for new members who discover you. Pin it in your community's start-here channel.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">025</div>
+      <div class="template-card-header"><div class="template-name">The "How We're Different" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">There are [NUMBER] projects doing [WHAT YOU DO].
+
+Here's why [PROJECT NAME] is different — and why that matters:
+
+[SPECIFIC DIFFERENTIATOR 1 — with evidence]
+[SPECIFIC DIFFERENTIATOR 2 — with evidence]
+[SPECIFIC DIFFERENTIATOR 3 — with evidence]
+
+Vague differentiation is marketing. Specific differentiation is a reason.</div>
+        <div class="template-usage"><strong>Usage:</strong> When you're in a crowded space. Don't claim to be "better" without specifics.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">026</div>
+      <div class="template-card-header"><div class="template-name">The Tokenomics Explainer</div></div>
+      <div class="template-body">
+        <div class="template-copy">[$TICKER] tokenomics, explained clearly:
+
+Total supply: [NUMBER]
+Distribution:
+→ [CATEGORY]: [%]
+→ [CATEGORY]: [%]
+→ [CATEGORY]: [%]
+
+Vesting: [SIMPLE SUMMARY]
+Emission schedule: [SIMPLE SUMMARY]
+
+Questions? Drop them below. We'll answer every one.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post once after launch and pin it. Bring it back whenever token questions spike.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">027</div>
+      <div class="template-card-header"><div class="template-name">The Security 101 Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] security basics — read this before anything else:
+
+✕ We will NEVER DM you first
+✕ We will NEVER ask for your seed phrase
+✕ Our ONLY official links are [LIST ALL OFFICIAL LINKS]
+
+If you get a DM claiming to be from us: it's a scam. Report it.
+
+Pin this. Share it with anyone new.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post during every launch wave when scammers are most active. Pin it permanently.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">028</div>
+      <div class="template-card-header"><div class="template-name">The "Why [MECHANISM] Matters" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Why [MECHANISM — e.g., on-chain governance / LP rewards / staking] matters more than people realize:
+
+Most people use [MECHANISM] for [OBVIOUS REASON].
+
+The real reason it matters: [DEEPER INSIGHT — 2-3 sentences]
+
+[HOW YOUR PROJECT IMPLEMENTS IT DIFFERENTLY]
+
+This isn't trivia. Understanding this changes how you interact with the protocol.</div>
+        <div class="template-usage"><strong>Usage:</strong> Posts that offer genuine insight get shared by people with audiences. Go deeper than surface-level.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">029</div>
+      <div class="template-card-header"><div class="template-name">The Ecosystem Map</div></div>
+      <div class="template-body">
+        <div class="template-copy">The [ECOSYSTEM NAME] ecosystem, mapped:
+
+[PROJECT NAME] sits at [POSITION].
+We connect with:
+→ [PROTOCOL 1]: [HOW/WHY]
+→ [PROTOCOL 2]: [HOW/WHY]
+→ [PROTOCOL 3]: [HOW/WHY]
+
+This matters because: [NETWORK EFFECT OR COMPOSABILITY INSIGHT]</div>
+        <div class="template-usage"><strong>Usage:</strong> As your ecosystem grows, ecosystem maps are high-value educational content.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">030</div>
+      <div class="template-card-header"><div class="template-name">The Glossary Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Quick glossary for [PROJECT NAME]:
+
+[TERM 1]: [SHORT DEFINITION]
+[TERM 2]: [SHORT DEFINITION]
+[TERM 3]: [SHORT DEFINITION]
+[TERM 4]: [SHORT DEFINITION]
+[TERM 5]: [SHORT DEFINITION]
+
+Full glossary in our docs: [LINK]
+
+Learning curve exists. We're committed to flattening it.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post early in your project's life. Link to it from your FAQ and community guide.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">031</div>
+      <div class="template-card-header"><div class="template-name">The "What We're NOT" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">What [PROJECT NAME] is NOT:
+
+✕ A [THING PEOPLE CONFUSE YOU WITH]
+✕ A [ANOTHER COMMON MISCONCEPTION]
+✕ A [THIRD THING — maybe a scam-adjacent category]
+
+What we are: [CLEAR, POSITIVE DESCRIPTION]
+
+Knowing what something isn't is often more useful than knowing what it is.</div>
+        <div class="template-usage"><strong>Usage:</strong> Anti-FUD educational content. More memorable than a positive description alone.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">032</div>
+      <div class="template-card-header"><div class="template-name">The "How To" Walkthrough</div></div>
+      <div class="template-body">
+        <div class="template-copy">How to [SPECIFIC ACTION — e.g., "stake your $TICKER / bridge to [CHAIN] / participate in governance"]:
+
+Step 1: [ACTION]
+Step 2: [ACTION]
+Step 3: [ACTION]
+Step 4: [ACTION]
+Step 5: [ACTION]
+
+Full video walkthrough: [LINK]
+If you get stuck: [SUPPORT CHANNEL]</div>
+        <div class="template-usage"><strong>Usage:</strong> Every major user action should have its own how-to post. These drive actual product usage.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">033</div>
+      <div class="template-card-header"><div class="template-name">The Chain/Network Explainer</div></div>
+      <div class="template-body">
+        <div class="template-copy">Why we built on [BLOCKCHAIN/NETWORK]:
+
+Not because it's trendy. Because [SPECIFIC TECHNICAL/PRACTICAL REASON].
+
+What that means for you:
+→ [USER BENEFIT 1]
+→ [USER BENEFIT 2]
+→ [USER BENEFIT 3]
+
+We evaluated [OTHER CHAINS]. Here's why we didn't choose them: [BRIEF, HONEST COMPARISON]</div>
+        <div class="template-usage"><strong>Usage:</strong> Addresses the inevitable "why not [other chain]?" question before it becomes community noise.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">034</div>
+      <div class="template-card-header"><div class="template-name">The Risk Disclosure Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Honest risk disclosure for [PROJECT NAME]:
+
+[RISK 1 — be specific]: [HOW YOU MITIGATE IT]
+[RISK 2]: [MITIGATION]
+[RISK 3]: [MITIGATION]
+
+We don't believe in hiding risk. We believe in managing it.
+
+Questions: ask in [SUPPORT CHANNEL].</div>
+        <div class="template-usage"><strong>Usage:</strong> Posting risk disclosures builds more trust than hiding them. Do this quarterly.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">035</div>
+      <div class="template-card-header"><div class="template-name">The Yield/Rewards Explainer</div></div>
+      <div class="template-body">
+        <div class="template-copy">Where do [PROJECT NAME] rewards come from?
+
+This is a real question. Here's the real answer:
+
+[HONEST EXPLANATION OF YIELD SOURCE — 3-5 sentences]
+
+The short version: [ONE SENTENCE SUMMARY]
+
+"Too good to be true" always means ask this question. We want you to ask it.</div>
+        <div class="template-usage"><strong>Usage:</strong> If your project involves yield, explain the source clearly. Vague yield claims are a red flag; clear ones are a selling point.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">036</div>
+      <div class="template-card-header"><div class="template-name">The History Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">A brief history of [YOUR SECTOR]:
+
+[YEAR]: [MILESTONE]
+[YEAR]: [MILESTONE]
+[YEAR]: [MILESTONE]
+[YEAR]: [MILESTONE]
+[YEAR — present]: [PROJECT NAME] enters
+
+Context matters. You can't know where this is going without knowing where it's been.</div>
+        <div class="template-usage"><strong>Usage:</strong> Historical context posts perform well and position your project as part of a larger narrative.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">037</div>
+      <div class="template-card-header"><div class="template-name">The "Ask Us Anything" Setup</div></div>
+      <div class="template-body">
+        <div class="template-copy">We're doing an AMA on [DATE] at [TIME] [TIMEZONE] in [PLATFORM/CHANNEL].
+
+Submit your questions below — we'll answer the best ones live.
+
+No restrictions on topic. We believe in answering hard questions, not avoiding them.</div>
+        <div class="template-usage"><strong>Usage:</strong> Posted 48-72 hours before an AMA. The "no restrictions" line signals confidence.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">038</div>
+      <div class="template-card-header"><div class="template-name">The Technical Mechanics Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[SPECIFIC TECHNICAL TOPIC] explained without the jargon:
+
+[ANALOGY OR SIMPLE EXPLANATION — 3-4 sentences]
+
+Why this matters for [PROJECT NAME]:
+[1-2 sentences tying to your product]
+
+Most people who use [CHAIN] don't know this. Now you do.</div>
+        <div class="template-usage"><strong>Usage:</strong> Technical education relevant to your chain. Creates informed users who make better decisions.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">039</div>
+      <div class="template-card-header"><div class="template-name">The "State of [SECTOR]" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">The state of [YOUR SECTOR] right now, honestly:
+
+What's working: [2-3 specific things]
+What's broken: [2-3 specific things]
+What [PROJECT NAME] is doing about the broken parts: [2-3 specific responses]
+
+This is the ecosystem we're building in. We're not separate from it — we're trying to improve it.</div>
+        <div class="template-usage"><strong>Usage:</strong> Quarterly "state of the industry" posts position you as a thoughtful actor, not just a participant.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">040</div>
+      <div class="template-card-header"><div class="template-name">The FAQ Thread</div></div>
+      <div class="template-body">
+        <div class="template-copy">Top 10 questions we get asked — answered:
+
+1. [QUESTION]: [ANSWER]
+2. [QUESTION]: [ANSWER]
+3. [QUESTION]: [ANSWER]
+4. [QUESTION]: [ANSWER]
+5. [QUESTION]: [ANSWER]
+...and 5 more 🧵
+
+Full FAQ: [LINK]
+
+Save this. Share it with anyone who asks you about [PROJECT NAME].</div>
+        <div class="template-usage"><strong>Usage:</strong> Post as a thread monthly. Update the questions as they evolve. High-save content.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CATEGORY 3: COMMUNITY -->
+<div class="cat-section" id="cat3">
+  <div class="cat-header">
+    <div class="cat-number">03</div>
+    <div class="cat-info">
+      <h2>Community Posts</h2>
+      <p>20 templates for building belonging, recognizing contributors, and deepening culture</p>
+    </div>
+  </div>
+  <div class="templates-grid">
+
+    <div class="template-card">
+      <div class="template-num">041</div>
+      <div class="template-card-header"><div class="template-name">The Introduction Prompt</div></div>
+      <div class="template-body">
+        <div class="template-copy">New here? Drop your intro below.
+
+Tell us:
+→ What brought you to [PROJECT NAME]
+→ What you're building or working on
+→ One thing you want to see this community become
+
+We read every one.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post weekly during growth phases. Reply to every introduction personally.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">042</div>
+      <div class="template-card-header"><div class="template-name">The Gratitude Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] wouldn't exist without the people who showed up before there was anything to show up for.
+
+[HANDLE 1] — [SPECIFIC THING THEY DID]
+[HANDLE 2] — [SPECIFIC THING]
+[HANDLE 3] — [SPECIFIC THING]
+
+This kind of specificity is intentional. You did specific things. You deserve specific thanks.</div>
+        <div class="template-usage"><strong>Usage:</strong> Recognition posts. Be specific — generic "thank you community" posts ring hollow.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">043</div>
+      <div class="template-card-header"><div class="template-name">The Community Challenge</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] community challenge — week of [DATE]:
+
+The challenge: [SPECIFIC, ACHIEVABLE TASK]
+
+How to enter: [INSTRUCTIONS]
+What you win: [PRIZE]
+Deadline: [DATE/TIME]
+
+Best entry gets featured. Second best too, if it's close.</div>
+        <div class="template-usage"><strong>Usage:</strong> Monthly. Keep challenges achievable. Feature winners prominently.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">044</div>
+      <div class="template-card-header"><div class="template-name">The Community Spotlight</div></div>
+      <div class="template-body">
+        <div class="template-copy">Community spotlight: [MEMBER NAME/HANDLE]
+
+[MEMBER] has been [SPECIFIC CONTRIBUTION] for [TIMEFRAME].
+
+[1-2 sentences about them that feel personal, not corporate — why they stand out]
+
+This community is better with them in it.
+
+— [PROJECT NAME] team</div>
+        <div class="template-usage"><strong>Usage:</strong> Weekly or bi-weekly. This is the most powerful retention mechanism in crypto communities.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">045</div>
+      <div class="template-card-header"><div class="template-name">The Pulse Check</div></div>
+      <div class="template-body">
+        <div class="template-copy">Quick community pulse check:
+
+What's one thing [PROJECT NAME] should prioritize in the next 30 days?
+
+Reply with your vote. We're reading.</div>
+        <div class="template-usage"><strong>Usage:</strong> Every 4-6 weeks. Ask genuinely. Act on the responses. Report back what you heard.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">046</div>
+      <div class="template-card-header"><div class="template-name">The Origin Story Ask</div></div>
+      <div class="template-body">
+        <div class="template-copy">What brought you to [PROJECT NAME]?
+
+For us, it was [FOUNDER'S HONEST ANSWER — specific, personal].
+
+We're curious about yours. Drop it in the replies.</div>
+        <div class="template-usage"><strong>Usage:</strong> Origin story posts generate long, authentic threads. Read every reply. Quote the best ones.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">047</div>
+      <div class="template-card-header"><div class="template-name">The Anniversary Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] is [X] [days / weeks / months / years] old today.
+
+Where we were then: [HONEST DESCRIPTION — small, uncertain, early]
+Where we are now: [SPECIFIC METRICS OR STATE]
+
+The people who were here at [EARLIER DATE]: you built this with us.
+
+Here's what comes next: [LINK]</div>
+        <div class="template-usage"><strong>Usage:</strong> Mark every meaningful anniversary. Continuity is a flex in crypto.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">048</div>
+      <div class="template-card-header"><div class="template-name">The "What Would You Build" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">If you had unlimited access to [PROJECT NAME]'s protocol/platform for 30 days, what would you build?
+
+No wrong answers. We're genuinely curious.
+
+(Some of what you say will become our roadmap.)</div>
+        <div class="template-usage"><strong>Usage:</strong> Generates ideas, makes community feel heard, feeds your product roadmap. Win-win-win.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">049</div>
+      <div class="template-card-header"><div class="template-name">The Team Introduction</div></div>
+      <div class="template-body">
+        <div class="template-copy">You've heard from [PROJECT NAME]. Here's who [PROJECT NAME] actually is:
+
+I'm [NAME], [ROLE]. I joined because [HONEST REASON — personal, specific].
+
+Before this: [RELEVANT BACKGROUND — human, not resume].
+
+What I'm most excited about: [SPECIFIC THING]
+
+Thread: the rest of the team introduces themselves below. 🧵</div>
+        <div class="template-usage"><strong>Usage:</strong> Every team member posts their introduction in the thread. Personal beats professional every time.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">050</div>
+      <div class="template-card-header"><div class="template-name">The Traditions Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] traditions, as they currently exist:
+
+→ [RITUAL 1 — e.g., "Every Friday we post our weekly build log"]
+→ [RITUAL 2]
+→ [RITUAL 3]
+
+Traditions are how cultures signal that they're real. We're just getting started building ours.</div>
+        <div class="template-usage"><strong>Usage:</strong> Naming and publishing your traditions makes them stickier and invites community participation.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">051</div>
+      <div class="template-card-header"><div class="template-name">The "Teach Us Something" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] community: teach us something.
+
+One thing you know about [RELEVANT DOMAIN] that you learned the hard way.
+
+We'll compile the best answers into a thread next week. Credit given.</div>
+        <div class="template-usage"><strong>Usage:</strong> Makes the community the experts. High engagement. Creates content that belongs to the community, not just the team.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">052</div>
+      <div class="template-card-header"><div class="template-name">The "We Were Wrong" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">We got [SPECIFIC THING] wrong.
+
+Here's what we said: [ORIGINAL CLAIM OR PLAN]
+Here's what actually happened: [REALITY]
+Here's what we're doing about it: [SPECIFIC RESPONSE]
+
+Owning mistakes clearly is the only way communities learn to trust institutions. We're trying to be worth trusting.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post this when you've made an error. The speed and specificity of the admission matters more than the error itself.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">053</div>
+      <div class="template-card-header"><div class="template-name">The Role/Status Explanation</div></div>
+      <div class="template-body">
+        <div class="template-copy">What the [ROLE NAME] role means in [PROJECT NAME]:
+
+Who gets it: [SPECIFIC CRITERIA]
+What it unlocks: [SPECIFIC BENEFITS]
+How to earn it: [CLEAR PATH]
+
+We don't give roles for follows or hype. We give them for [WHAT YOU ACTUALLY VALUE].</div>
+        <div class="template-usage"><strong>Usage:</strong> Post when you launch a new role or status tier. Specificity prevents "why don't I have it" drama.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">054</div>
+      <div class="template-card-header"><div class="template-name">The Live Event Recap</div></div>
+      <div class="template-body">
+        <div class="template-copy">[EVENT NAME] recap for everyone who couldn't make it:
+
+What we covered: [3-5 BULLET POINTS]
+Best question asked: [QUESTION + SHORT ANSWER]
+One thing we said we'd do before the next one: [SPECIFIC COMMITMENT]
+
+Full recording: [LINK]
+Next event: [DATE]</div>
+        <div class="template-usage"><strong>Usage:</strong> Every event gets a written recap within 24 hours. Serves people who couldn't attend; reinforces community memory.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">055</div>
+      <div class="template-card-header"><div class="template-name">The Feedback Request</div></div>
+      <div class="template-body">
+        <div class="template-copy">We're about to make a decision about [TOPIC].
+
+Before we do: your input.
+
+[SPECIFIC QUESTION OR POLL OPTIONS]
+
+We'll share what we heard and what we decided by [DATE].</div>
+        <div class="template-usage"><strong>Usage:</strong> Community governance before formal governance exists. Shows you value input, builds buy-in.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">056</div>
+      <div class="template-card-header"><div class="template-name">The "Who's Building?" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Quick survey:
+
+What are you building / working on right now?
+
+Doesn't have to be related to [PROJECT NAME]. We're just curious who's in the room.
+
+Drop it below.</div>
+        <div class="template-usage"><strong>Usage:</strong> Understanding your community's composition helps you serve them better. Also creates connections between members.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">057</div>
+      <div class="template-card-header"><div class="template-name">The OG Recognition Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">To everyone who joined [PROJECT NAME] before [SIGNIFICANT DATE OR MILESTONE]:
+
+You were here when it was [HONEST DESCRIPTION OF EARLY STATE].
+
+Your early belief is the foundation everything else is built on.
+
+We see you. OG role incoming for wallets that [SPECIFIC CRITERIA].</div>
+        <div class="template-usage"><strong>Usage:</strong> Retroactive recognition for early community members. Powerful retention signal.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">058</div>
+      <div class="template-card-header"><div class="template-name">The Community Values Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">The [PROJECT NAME] community values, as we understand them right now:
+
+→ [VALUE 1]: [ONE SENTENCE EXPLANATION]
+→ [VALUE 2]: [ONE SENTENCE EXPLANATION]
+→ [VALUE 3]: [ONE SENTENCE EXPLANATION]
+→ [VALUE 4]: [ONE SENTENCE EXPLANATION]
+
+These emerged from watching how the best people here behave. They're descriptive, not aspirational.
+
+Missing anything? Tell us.</div>
+        <div class="template-usage"><strong>Usage:</strong> Publishing community values makes them real and invites co-ownership.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">059</div>
+      <div class="template-card-header"><div class="template-name">The Meetup/IRL Event Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] is hosting an IRL event in [CITY] on [DATE].
+
+Details:
+📍 [VENUE / AREA]
+🕐 [TIME]
+🎟 [ACCESS — free / RSVP required / token-gated]
+
+RSVP: [LINK]
+
+If you've only known [PROJECT NAME] online: come meet us in person. Some things don't translate to screens.</div>
+        <div class="template-usage"><strong>Usage:</strong> IRL events are major culture moments. Post 2-3 weeks out, again 1 week out, again day-of.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">060</div>
+      <div class="template-card-header"><div class="template-name">The "State of the Community" Monthly Update</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] community update — [MONTH]:
+
+Growth: [NUMBER] → [NUMBER] members ([CHANGE])
+Most active channels: [LIST]
+Top contributors: [NAMES/HANDLES]
+Events held: [NUMBER]
+
+What the community asked for: [TOP 3 REQUESTS]
+What we did about it: [HONEST ANSWERS]
+
+Next month: [WHAT'S COMING]</div>
+        <div class="template-usage"><strong>Usage:</strong> Monthly. Consistency is credibility.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CATEGORY 4: MARKET -->
+<div class="cat-section" id="cat4">
+  <div class="cat-header">
+    <div class="cat-number">04</div>
+    <div class="cat-info">
+      <h2>Market Commentary Posts</h2>
+      <p>15 templates for market moments, volatility, and macro observations</p>
+    </div>
+  </div>
+  <div class="templates-grid">
+
+    <div class="template-card">
+      <div class="template-num">061</div>
+      <div class="template-card-header"><div class="template-name">The Red Day Response</div></div>
+      <div class="template-body">
+        <div class="template-copy">Market's down [X]% today.
+
+What changed about [PROJECT NAME]: nothing.
+
+We're building [SPECIFIC THING] right now. The chart doesn't change the roadmap.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post during market downturns. Short, confident, never dismissive of community concern.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">062</div>
+      <div class="template-card-header"><div class="template-name">The Volatility Acknowledgment</div></div>
+      <div class="template-body">
+        <div class="template-copy">[$TICKER] is down [X]% from its [ATH/RECENT HIGH].
+
+We're not going to pretend that's comfortable.
+
+What we can tell you: [SPECIFIC OPERATIONAL UPDATE — what's shipping, what's live, what's real].
+
+Price and progress aren't the same thing. We're focused on the one we control.</div>
+        <div class="template-usage"><strong>Usage:</strong> During significant drawdowns. Acknowledges reality, redirects to substance.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">063</div>
+      <div class="template-card-header"><div class="template-name">The Macro Observation</div></div>
+      <div class="template-body">
+        <div class="template-copy">Something worth paying attention to: [MACRO EVENT/DEVELOPMENT].
+
+Our read on what this means: [HONEST 2-3 SENTENCE TAKE]
+
+How it affects [PROJECT NAME]: [SPECIFIC IMPACT — or "it doesn't, here's why"]
+
+Happy to discuss in [COMMUNITY CHANNEL].</div>
+        <div class="template-usage"><strong>Usage:</strong> When meaningful macro events happen. Be thoughtful, not reactionary.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">064</div>
+      <div class="template-card-header"><div class="template-name">The Bull Market Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">The market is up. A lot of things are up.
+
+For [PROJECT NAME], what matters more than price: [SPECIFIC METRIC — users, TVL, transactions].
+
+That metric is at [NUMBER/STATE].
+
+[ONE SENTENCE CONNECTING FUNDAMENTALS TO LONG-TERM VALUE]</div>
+        <div class="template-usage"><strong>Usage:</strong> During bull runs, redirect attention to fundamentals before hype crowds them out.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">065</div>
+      <div class="template-card-header"><div class="template-name">The Patience Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Crypto moves fast.
+
+[SPECIFIC METRIC] has grown [X]% in [TIMEFRAME].
+
+[PROJECT NAME] is building for [5-10 YEAR TIMEFRAME]. We measure ourselves against that.
+
+Not against the weekly chart.</div>
+        <div class="template-usage"><strong>Usage:</strong> When your progress feels slow relative to market noise. Reframe the timeline.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">066</div>
+      <div class="template-card-header"><div class="template-name">The "What We're Watching" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">What [PROJECT NAME] is keeping an eye on right now:
+
+→ [DEVELOPMENT 1 — regulatory, technical, competitive]
+→ [DEVELOPMENT 2]
+→ [DEVELOPMENT 3]
+
+None of these change our immediate roadmap. All of them inform our thinking.
+
+What are you watching? Drop it below.</div>
+        <div class="template-usage"><strong>Usage:</strong> Bi-weekly during active market periods. Positions you as informed, not reactive.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">067</div>
+      <div class="template-card-header"><div class="template-name">The Comparative Metric Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Quick metric comparison for context:
+
+[YOUR PROJECT] [METRIC]: [NUMBER]
+[RELEVANT BENCHMARK]: [NUMBER]
+
+The gap is [SIZE]. The gap is closing. Here's our evidence: [DATA POINT]</div>
+        <div class="template-usage"><strong>Usage:</strong> Use data to contextualize progress. Never claim more than your data supports.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">068</div>
+      <div class="template-card-header"><div class="template-name">The "Despite The Market" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Despite [MARKET CONDITION]:
+
+[PROJECT NAME] shipped [LIST OF 3-5 SPECIFIC THINGS] in the last [TIMEFRAME].
+
+We don't track the bear market. We track the build calendar.</div>
+        <div class="template-usage"><strong>Usage:</strong> During bear markets. Specific evidence of progress is the only effective anti-FUD.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">069</div>
+      <div class="template-card-header"><div class="template-name">The Token Unlock Transparency Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[DATE]: [AMOUNT] [$TICKER] tokens unlock.
+
+Recipients: [WHO — team / investors / advisors]
+Vesting completed: [YES/PARTIAL/CONTEXT]
+Impact: [HONEST ASSESSMENT]
+
+We're flagging this because you should know. Surprises damage trust. Data doesn't.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post 7-14 days before any significant token unlock. Preempt the FUD.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">070</div>
+      <div class="template-card-header"><div class="template-name">The Competitor Commentary</div></div>
+      <div class="template-body">
+        <div class="template-copy">[COMPETITOR] announced [THING] today.
+
+Our honest take: [2-3 sentences. Be fair. Acknowledge what's good about it.]
+
+How this affects [PROJECT NAME]: [HONEST ANSWER]
+
+We're competing on [SPECIFIC GROUND]. That competition is good for the space.</div>
+        <div class="template-usage"><strong>Usage:</strong> When competitors make moves that will generate community questions. Be ahead of it.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">071</div>
+      <div class="template-card-header"><div class="template-name">The Crypto Cycle Observation</div></div>
+      <div class="template-body">
+        <div class="template-copy">Observation from watching [X] cycles:
+
+[PATTERN OBSERVATION]
+
+Where we are now: [YOUR READ ON CURRENT CYCLE POSITION]
+
+[PROJECT NAME]'s strategy for this moment: [SPECIFIC]</div>
+        <div class="template-usage"><strong>Usage:</strong> During clear cycle moments. Positions your team as experienced observers, not market tourists.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">072</div>
+      <div class="template-card-header"><div class="template-name">The New User Market Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">For everyone who's new to crypto and found [PROJECT NAME] first:
+
+A few things worth knowing about how this market works:
+
+→ [HONEST POINT 1 — price volatility is normal and significant]
+→ [HONEST POINT 2 — DYOR, what it means]
+→ [HONEST POINT 3 — long-term vs. short-term lens]
+
+We'd rather give you context than just hype.</div>
+        <div class="template-usage"><strong>Usage:</strong> During high-growth periods when new users flood in with unrealistic expectations.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">073</div>
+      <div class="template-card-header"><div class="template-name">The Liquidity/Volume Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">[$TICKER] liquidity update:
+
+Current liquidity on [PLATFORM]: [AMOUNT]
+24h volume: [AMOUNT]
+Slippage for [SIZE] trade: [APPROXIMATE]
+
+Liquidity is a feature, not just a metric. Adding liquidity: [LINK]</div>
+        <div class="template-usage"><strong>Usage:</strong> Bi-monthly liquidity transparency posts build confidence in your token's tradability.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">074</div>
+      <div class="template-card-header"><div class="template-name">The Sector Rotation Comment</div></div>
+      <div class="template-body">
+        <div class="template-copy">[SECTOR] is having a moment right now.
+
+[PROJECT NAME] is in [SECTOR / ADJACENT SECTOR]. Here's the honest context:
+
+[2-3 SENTENCES: what sector momentum means for your project]
+
+We benefit from [SPECIFIC TAILWIND]. We're not just riding the wave — we're [SPECIFIC DIFFERENTIATOR].</div>
+        <div class="template-usage"><strong>Usage:</strong> During sector-specific bull runs. Honest about tailwinds without being purely opportunistic.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">075</div>
+      <div class="template-card-header"><div class="template-name">The Long-Term Holder Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">For the people who've held [$TICKER] for [X+ months]:
+
+You've watched [SPECIFIC EVENTS — the bear market, the team changes, the pivots].
+
+Here's what we owe you: [SPECIFIC COMMITMENTS]
+
+Here's what we've delivered: [LIST OF 3-5 THINGS — honest]
+
+The rest of the roadmap is at [LINK]. You've earned the full picture.</div>
+        <div class="template-usage"><strong>Usage:</strong> Every 6 months. Long-term holder appreciation posts are more credible than new investor acquisition posts.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CATEGORY 5: CULTURE & MEME -->
+<div class="cat-section" id="cat5">
+  <div class="cat-header">
+    <div class="cat-number">05</div>
+    <div class="cat-info">
+      <h2>Culture &amp; Meme Posts</h2>
+      <p>15 templates for community energy, personality, and the posts that make people smile</p>
+    </div>
+  </div>
+  <div class="templates-grid">
+
+    <div class="template-card">
+      <div class="template-num">076</div>
+      <div class="template-card-header"><div class="template-name">The Late Night Build Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">It's [TIME] and [TEAM MEMBER / "we're"] still in the [editor / server / Discord].
+
+What we're working on: [SPECIFIC — not "big stuff coming"]
+
+The best projects don't have schedules. They have obsessions.</div>
+        <div class="template-usage"><strong>Usage:</strong> Authentic behind-the-scenes energy. Only post if it's actually true.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">077</div>
+      <div class="template-card-header"><div class="template-name">The Crypto Twitter Inside Joke</div></div>
+      <div class="template-body">
+        <div class="template-copy">[REFERENCE TO CURRENT CRYPTO MEME OR CULTURAL MOMENT]
+
+[PROJECT NAME] status: [RELATABLE STATE — e.g., "building regardless" / "this is fine"]</div>
+        <div class="template-usage"><strong>Usage:</strong> Only when you have something genuinely funny. Never force it. If you have to ask if it's funny, it isn't.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">078</div>
+      <div class="template-card-header"><div class="template-name">The "We Don't Do That Here" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Quick [PROJECT NAME] culture note:
+
+We don't: [SPECIFIC BEHAVIOR — e.g., "post fake volume / fake urgency / fake scarcity"]
+
+We do: [SPECIFIC ALTERNATIVE — e.g., "post real numbers / give honest timelines / build in public"]
+
+Not a lecture. Just how this community is built.</div>
+        <div class="template-usage"><strong>Usage:</strong> Sets culture without being preachy. Specific behavior beats vague values.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">079</div>
+      <div class="template-card-header"><div class="template-name">The Self-Aware Launch Reflection</div></div>
+      <div class="template-body">
+        <div class="template-copy">Things nobody told us about launching [PROJECT NAME]:
+
+→ [SPECIFIC UNEXPECTED THING 1 — make it real and specific]
+→ [SPECIFIC UNEXPECTED THING 2]
+→ [SPECIFIC UNEXPECTED THING 3]
+
+If you're about to launch something: [ONE PIECE OF GENUINE ADVICE]</div>
+        <div class="template-usage"><strong>Usage:</strong> Founders love these. The more specific and honest, the better the engagement.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">080</div>
+      <div class="template-card-header"><div class="template-name">The "We Read Everything" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">A few things from [COMMUNITY PLATFORM] this week that stayed with us:
+
+"[QUOTE FROM MEMBER 1]" — [HANDLE] (on [TOPIC])
+"[QUOTE FROM MEMBER 2]" — [HANDLE]
+"[QUOTE FROM MEMBER 3]" — [HANDLE]
+
+The community is smarter than any one of us. This is proof.</div>
+        <div class="template-usage"><strong>Usage:</strong> Weekly or bi-weekly. Get explicit permission before quoting community members externally.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">081</div>
+      <div class="template-card-header"><div class="template-name">The Crypto Onboarding Horror Story</div></div>
+      <div class="template-body">
+        <div class="template-copy">Your first time in crypto, honestly:
+
+[RELATABLE FUMBLE — e.g., "Paid $80 in gas to send $20." / "Sent to the wrong network. Never saw it again."]
+
+We've all been there. [PROJECT NAME] is trying to make [SPECIFIC PART OF THIS EXPERIENCE] less terrible.
+
+What was your first crypto mistake? Drop it below.</div>
+        <div class="template-usage"><strong>Usage:</strong> Community bonding through shared pain. Also humanizes your project.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">082</div>
+      <div class="template-card-header"><div class="template-name">The Conviction Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">What we believe that most people in [SECTOR] don't:
+
+[SPECIFIC, POTENTIALLY CONTROVERSIAL BELIEF]
+
+We've believed this since [TIMEFRAME — before it was obvious].
+
+If we're right, [PROJECT NAME] is early. If we're wrong, we'll have learned something worth knowing.</div>
+        <div class="template-usage"><strong>Usage:</strong> Conviction posts attract people who share the conviction. The specificity is what makes it resonate.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">083</div>
+      <div class="template-card-header"><div class="template-name">The Quiet Season Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">We've been quiet.
+
+Not because nothing's happening — because everything is.
+
+[WHAT'S IN PROGRESS — enough to be credible, not so much it becomes a promise]
+
+Back soon.</div>
+        <div class="template-usage"><strong>Usage:</strong> During heads-down building periods. Acknowledges the silence without over-explaining it.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">084</div>
+      <div class="template-card-header"><div class="template-name">The Community Brag (Low-Key)</div></div>
+      <div class="template-body">
+        <div class="template-copy">Something the [PROJECT NAME] community did that other projects' communities didn't:
+
+[SPECIFIC THING — e.g., "caught a bug in the contract before audit / wrote better documentation than we did"]
+
+You're a different kind of community. We're not sure we deserve you yet.</div>
+        <div class="template-usage"><strong>Usage:</strong> Community pride posts land best when the thing being celebrated is specific and unexpected.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">085</div>
+      <div class="template-card-header"><div class="template-name">The "Year Ago" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">One year ago today, [PROJECT NAME] was [SPECIFIC STATE — e.g., "a Notion doc and a group chat"].
+
+Today: [SPECIFIC STATE — metrics, products, community size].
+
+We don't look back much. But sometimes the distance shows you the progress.</div>
+        <div class="template-usage"><strong>Usage:</strong> Mark the anniversary with evidence. Specific then/now comparisons are more powerful than growth percentages alone.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">086</div>
+      <div class="template-card-header"><div class="template-name">The "Bad Week" Post</div></div>
+      <div class="template-body">
+        <div class="template-copy">Honest report: it was a rough week.
+
+[WHAT HAPPENED — specific, honest, not self-flagellating]
+
+What we did about it: [SPECIFIC RESPONSE]
+What we learned: [SPECIFIC LESSON]
+
+We don't hide hard weeks. We treat them as information.</div>
+        <div class="template-usage"><strong>Usage:</strong> Occasional honesty about hard periods builds more trust than constant positivity. The community can tell the difference.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">087</div>
+      <div class="template-card-header"><div class="template-name">The Product Preference Poll</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] debate:
+
+[OPTION A] vs. [OPTION B]
+
+No wrong answer. This is genuinely going to inform [SPECIFIC DECISION].
+
+RT for reach — more votes = better data.</div>
+        <div class="template-usage"><strong>Usage:</strong> Always tell them what the decision is for. Closing the loop after the poll builds credibility.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">088</div>
+      <div class="template-card-header"><div class="template-name">The "Why I Stayed" Repost</div></div>
+      <div class="template-body">
+        <div class="template-copy">Someone in our community posted this:
+
+"[QUOTE FROM COMMUNITY MEMBER ABOUT WHY THEY BELIEVE IN THE PROJECT]"
+
+We screenshot things like this. Not to use them for marketing — to remind ourselves on the bad weeks.
+
+— [PROJECT NAME] team</div>
+        <div class="template-usage"><strong>Usage:</strong> Genuine community testimonials. Always get permission. The specificity of the quote is what makes it land.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">089</div>
+      <div class="template-card-header"><div class="template-name">The Culture Manifesto (Short)</div></div>
+      <div class="template-body">
+        <div class="template-copy">The [PROJECT NAME] way, distilled:
+
+[1-line version of your core belief]
+[1-line version of how you build]
+[1-line version of who you build for]
+[1-line version of what you refuse to do]
+
+Some projects build products. We're trying to build something you want to be part of.</div>
+        <div class="template-usage"><strong>Usage:</strong> Post quarterly as your culture evolves. Save old versions — the evolution tells a story.</div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-num">090</div>
+      <div class="template-card-header"><div class="template-name">The Last Post Template (Chapter Transition)</div></div>
+      <div class="template-body">
+        <div class="template-copy">[PROJECT NAME] is entering [NEW PHASE / CHAPTER — be specific].
+
+What we're leaving behind: [HONEST DESCRIPTION — the old version, the old approach]
+
+What we're bringing with us: [WHAT REMAINS — values, community, core product]
+
+What comes next: [SPECIFIC — not vague "exciting things"]
+
+If you're coming with us: welcome to [NEW CHAPTER NAME].</div>
+        <div class="template-usage"><strong>Usage:</strong> Chapter transitions, pivots, or new seasons. Frame change as earned, not arbitrary.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer" style="border-top: 3px solid var(--yellow);">
+  <div>
+    <div class="footer-brand">DRAFT</div>
+    <div style="color: var(--gray); font-size: 13px; margin-top: 4px;">Post something real.</div>
+  </div>
+  <div class="footer-meta">
+    Built by Priya Nair · $39<br>
+    90 templates · 5 categories<br>
+    Twitter/X · Farcaster · Lens · Telegram · Discord
+  </div>
+</div>
+
+</body>
+</html>

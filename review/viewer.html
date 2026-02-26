@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro-Business Viewer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0d0d0d;
+    color: #e0e0e0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: #111;
+    border-bottom: 1px solid #222;
+    padding: 0 20px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    overflow-x: auto;
+  }
+  .topbar-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    white-space: nowrap;
+    margin-right: 12px;
+  }
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid #2a2a2a;
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.15s;
+    background: transparent;
+    color: #888;
+    user-select: none;
+  }
+  .tab:hover { border-color: #444; color: #ccc; background: #1a1a1a; }
+  .tab.active { background: #1e1e1e; border-color: #444; color: #fff; }
+  .tab .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .tab .price {
+    font-size: 10px;
+    color: #555;
+    font-weight: 600;
+  }
+  .tab.active .price { color: #888; }
+
+  /* STATUS BAR */
+  .statusbar {
+    background: #0d0d0d;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 0 20px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .status-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .status-desc {
+    font-size: 11px;
+    color: #555;
+    flex: 1;
+  }
+  .status-open {
+    font-size: 11px;
+    color: #4a9eff;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 2px 8px;
+    border: 1px solid #1e3a5a;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .status-open:hover { background: #1e3a5a; }
+
+  /* IFRAME CONTAINER */
+  .iframe-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* LOADING STATE */
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .loading-overlay.hidden { opacity: 0; }
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid #222;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 12px; color: #555; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">Products</span>
+  <!-- tabs injected by JS -->
+</div>
+
+<div class="statusbar">
+  <span class="status-name" id="status-name"></span>
+  <span class="status-desc" id="status-desc"></span>
+  <a class="status-open" id="status-open" href="#" target="_blank">Open in new tab ↗</a>
+</div>
+
+<div class="iframe-wrap">
+  <iframe id="viewer" src="" title="Product Viewer"></iframe>
+  <div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    <span class="loading-text">Loading...</span>
+  </div>
+</div>
+
+<script>
+  const products = [
+    {
+      id: 'draft',
+      name: 'DRAFT',
+      label: '90-Day Content',
+      desc: '90 days of crypto content templates — 5 categories, 20 templates each',
+      price: '$19',
+      color: '#f5c518',
+      file: '../businesses/02-draft/90-Days-of-Crypto-Content.html'
+    },
+    {
+      id: 'stack',
+      name: 'STACK',
+      label: 'Prompt Vault',
+      desc: '200+ crypto-specific AI prompts organized by use case',
+      price: '$27',
+      color: '#7c6af5',
+      file: '../businesses/03-stack/STACK-Prompt-Vault.html'
+    },
+    {
+      id: 'blueprint',
+      name: 'BLUEPRINT',
+      label: 'Brand Starter',
+      desc: 'Complete Web3 brand kit — colors, type, logo, pitch deck, voice',
+      price: '$37',
+      color: '#c9a84c',
+      file: '../businesses/04-blueprint/Web3-Brand-Starter-Kit.html'
+    },
+    {
+      id: 'ledger',
+      name: 'LEDGER',
+      label: 'Portfolio Tracker',
+      desc: 'Notion crypto portfolio tracker — databases, views, journal templates',
+      price: '$17',
+      color: '#3ecf8e',
+      file: '../businesses/05-ledger/Crypto-Portfolio-Tracker.html'
+    },
+    {
+      id: 'flow',
+      name: 'FLOW',
+      label: 'Community Bible',
+      desc: 'Community growth playbook — 0 to 10K members, templates included',
+      price: '$29',
+      color: '#ff6b6b',
+      file: '../businesses/06-flow/Community-Growth-Bible.html'
+    },
+    {
+      id: 'pulse',
+      name: 'PULSE',
+      label: 'Twitter Mastery',
+      desc: '50 tweet templates + growth guide for Crypto Twitter',
+      price: '$24',
+      color: '#4a9eff',
+      file: '../businesses/07-pulse/Crypto-Twitter-Mastery-Pack.html'
+    }
+  ];
+
+  const topbar = document.querySelector('.topbar');
+  const iframe = document.getElementById('viewer');
+  const loading = document.getElementById('loading');
+  const statusName = document.getElementById('status-name');
+  const statusDesc = document.getElementById('status-desc');
+  const statusOpen = document.getElementById('status-open');
+
+  let current = null;
+
+  function load(product) {
+    if (current === product.id) return;
+    current = product.id;
+
+    // update tabs
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.id === product.id);
+    });
+
+    // update status bar
+    statusName.textContent = product.name + ' — ' + product.label;
+    statusDesc.textContent = product.desc;
+    statusOpen.href = product.file;
+
+    // show loading
+    loading.classList.remove('hidden');
+    iframe.src = product.file;
+  }
+
+  iframe.addEventListener('load', () => {
+    loading.classList.add('hidden');
+  });
+
+  // build tabs
+  products.forEach(p => {
+    const tab = document.createElement('div');
+    tab.className = 'tab';
+    tab.dataset.id = p.id;
+    tab.innerHTML = `
+      <span class="dot" style="background:${p.color}"></span>
+      ${p.name}
+      <span class="price">${p.price}</span>
+    `;
+    tab.addEventListener('click', () => load(p));
+    topbar.appendChild(tab);
+  });
+
+  // load first
+  load(products[0]);
+</script>
+</body>
+</html>

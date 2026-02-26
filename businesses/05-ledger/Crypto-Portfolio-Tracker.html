@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEDGER — Crypto Portfolio Tracker</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #1C1C1E;
+    --surface: #2C2C34;
+    --surface2: #363640;
+    --mint: #3FFFA8;
+    --ice: #A8D8EA;
+    --white: #F2F2F2;
+    --gray: #9A9A9A;
+    --red: #FF5F5F;
+    --border: #3A3A44;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  /* MONO for headings/data */
+  .mono { font-family: 'Courier New', Courier, monospace; }
+  /* HEADER TERMINAL BAR */
+  .terminal-bar {
+    background: #0D0D0F;
+    border-bottom: 1px solid var(--mint);
+    padding: 0 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .term-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .term-title {
+    margin-left: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 2px;
+  }
+  .term-right {
+    margin-left: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--mint);
+    letter-spacing: 1px;
+  }
+  /* HEADER */
+  .header {
+    background: #0D0D0F;
+    border-bottom: 1px solid var(--border);
+    padding: 52px 56px 44px;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .brand {
+    font-family: 'Courier New', monospace;
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    color: var(--mint);
+    line-height: 1;
+  }
+  .brand-sub {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--gray);
+    letter-spacing: 3px;
+    margin-top: 8px;
+  }
+  .header-meta {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 2.2;
+    text-align: right;
+  }
+  .header-meta .hl { color: var(--mint); }
+  .header-desc {
+    font-size: 16px;
+    color: var(--gray);
+    max-width: 640px;
+    line-height: 1.8;
+  }
+  .stat-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  .stat-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--mint);
+    padding: 12px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--gray);
+  }
+  .stat-chip .val { color: var(--mint); font-size: 20px; display: block; font-weight: 700; }
+  /* SECTION */
+  .section {
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 56px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .section-prefix {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--mint);
+    letter-spacing: 2px;
+    opacity: 0.7;
+  }
+  .section-title {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: var(--gray);
+    margin-left: auto;
+    font-style: italic;
+  }
+  .section-body {
+    padding: 36px 56px;
+  }
+  /* DATA TABLES */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+  .data-table thead tr {
+    background: #0D0D0F;
+  }
+  .data-table th {
+    text-align: left;
+    padding: 10px 14px;
+    color: var(--mint);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--mint);
+    font-weight: 400;
+  }
+  .data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--gray);
+    vertical-align: top;
+  }
+  .data-table td:first-child { color: var(--white); }
+  .data-table tr:hover td { background: rgba(63, 255, 168, 0.03); }
+  .data-table td.pos { color: var(--mint); }
+  .data-table td.neg { color: var(--red); }
+  .data-table td.formula { color: var(--ice); font-style: italic; }
+  .property-type {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--ice);
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  /* SELECT OPTIONS */
+  .options-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .options-block h4 {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--mint);
+    margin-bottom: 12px;
+  }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--white);
+  }
+  .tag.green { border-color: var(--mint); color: var(--mint); }
+  .tag.red { border-color: var(--red); color: var(--red); }
+  .tag.ice { border-color: var(--ice); color: var(--ice); }
+  /* VIEW CARDS */
+  .view-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .view-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+  .view-num {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: var(--mint);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .view-name {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .view-desc { font-size: 12px; color: var(--gray); line-height: 1.6; }
+  /* TEMPLATE BLOCK */
+  .template-block {
+    background: #0D0D0F;
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--mint);
+    padding: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 2;
+    color: var(--gray);
+    white-space: pre-line;
+    margin-bottom: 20px;
+    word-break: break-word;
+  }
+  .template-block .section-mark { color: var(--mint); font-weight: 700; }
+  .template-block .filled { color: var(--white); }
+  .template-block .placeholder { color: var(--ice); }
+  .template-block .comment { color: var(--gray); opacity: 0.5; font-size: 11px; }
+  /* SAMPLE DATA */
+  .sample-portfolio {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .portfolio-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 60px 1fr auto auto auto auto;
+    gap: 16px;
+    align-items: center;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+  .portfolio-row:hover { border-color: var(--mint); }
+  .token-rank { color: var(--gray); font-size: 11px; }
+  .token-name { color: var(--white); font-weight: 700; }
+  .token-ticker { color: var(--gray); font-size: 11px; }
+  .token-val { color: var(--white); }
+  .token-pnl-pos { color: var(--mint); }
+  .token-pnl-neg { color: var(--red); }
+  .token-weight { color: var(--ice); font-size: 12px; }
+  .risk-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .risk-low { border-color: var(--mint); color: var(--mint); }
+  .risk-med { border-color: var(--ice); color: var(--ice); }
+  .risk-high { border-color: #FFB347; color: #FFB347; }
+  .risk-degen { border-color: var(--red); color: var(--red); }
+  /* JOURNAL TEMPLATE */
+  .journal-block {
+    background: #0D0D0F;
+    border: 1px solid var(--border);
+    padding: 32px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 2;
+    color: var(--gray);
+    margin-bottom: 20px;
+  }
+  .journal-block .j-title { color: var(--mint); font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .journal-block .j-section { color: var(--ice); font-size: 11px; letter-spacing: 2px; margin-top: 16px; margin-bottom: 4px; }
+  .journal-block .j-fill { color: var(--white); }
+  .journal-block .j-placeholder { color: var(--gray); font-style: italic; }
+  /* REVIEW TEMPLATE */
+  .review-table { width: 100%; border-collapse: collapse; font-family: 'Courier New', monospace; font-size: 12px; margin-bottom: 16px; }
+  .review-table td { padding: 8px 12px; border: 1px solid var(--border); color: var(--gray); }
+  .review-table td:first-child { color: var(--ice); width: 180px; }
+  .review-table td:last-child { color: var(--white); }
+  /* SETUP STEPS */
+  .setup-steps { display: flex; flex-direction: column; gap: 16px; }
+  .step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .step-num {
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--mint);
+    opacity: 0.4;
+    flex-shrink: 0;
+    width: 36px;
+    line-height: 1.2;
+  }
+  .step-content {}
+  .step-title { font-family: 'Courier New', monospace; font-size: 14px; color: var(--white); font-weight: 700; margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--gray); line-height: 1.6; }
+  /* MAINTENANCE */
+  .maintenance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .maint-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--mint);
+    padding: 20px;
+  }
+  .maint-freq { font-family: 'Courier New', monospace; font-size: 11px; color: var(--mint); letter-spacing: 2px; margin-bottom: 8px; }
+  .maint-time { font-size: 13px; color: var(--gray); margin-bottom: 12px; font-style: italic; }
+  .maint-tasks { list-style: none; font-size: 12px; color: var(--gray); }
+  .maint-tasks li { padding: 3px 0; }
+  .maint-tasks li::before { content: '→ '; color: var(--mint); }
+  /* RULES */
+  .rules-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--mint);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .rules-block h4 { font-family: 'Courier New', monospace; font-size: 11px; color: var(--mint); letter-spacing: 2px; margin-bottom: 12px; }
+  .rule-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: var(--white); }
+  .rule-num { font-family: 'Courier New', monospace; color: var(--mint); flex-shrink: 0; }
+  /* FOOTER */
+  .footer {
+    background: #0D0D0F;
+    border-top: 1px solid var(--mint);
+    padding: 36px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-brand { font-family: 'Courier New', monospace; font-size: 24px; color: var(--mint); font-weight: 700; }
+  .footer-tagline { font-size: 13px; color: var(--gray); font-style: italic; margin-top: 4px; }
+  .footer-meta { font-family: 'Courier New', monospace; font-size: 11px; color: var(--gray); text-align: right; line-height: 2.2; }
+  .inline-code { font-family: 'Courier New', monospace; background: var(--surface2); padding: 2px 6px; color: var(--ice); font-size: 12px; }
+  p.body-text { font-size: 14px; color: var(--gray); line-height: 1.8; margin-bottom: 16px; }
+  @media (max-width: 768px) {
+    .header, .section-header, .section-body, .footer { padding-left: 20px; padding-right: 20px; }
+    .brand { font-size: 40px; }
+    .portfolio-row { grid-template-columns: 1fr auto; }
+    .portfolio-row .token-rank, .portfolio-row .token-weight { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TERMINAL BAR -->
+<div class="terminal-bar">
+  <div class="term-dot" style="background:#FF5F5F"></div>
+  <div class="term-dot" style="background:#FFBD2E"></div>
+  <div class="term-dot" style="background:#27C93F"></div>
+  <div class="term-title">LEDGER v1.0 — Portfolio Reference Guide</div>
+  <div class="term-right">STATUS: READY</div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="brand">LEDGER</div>
+      <div class="brand-sub">// Your portfolio. Your proof.</div>
+    </div>
+    <div class="header-meta">
+      <span class="hl">Crypto Portfolio Tracker</span><br>
+      Complete Reference System<br>
+      By <span class="hl">Marcus Wei</span> · $29<br>
+      5 Components · Offline Ready
+    </div>
+  </div>
+  <p class="header-desc">If you can't measure it, you can't manage it. LEDGER is the tracking system I wish I'd had on day one. Every token. Every trade. Every decision. No gaps, no guessing.</p>
+  <div class="stat-row">
+    <div class="stat-chip"><span class="val">5</span>System Components</div>
+    <div class="stat-chip"><span class="val">30+</span>Tracked Properties</div>
+    <div class="stat-chip"><span class="val">5</span>Views per Database</div>
+    <div class="stat-chip"><span class="val">3</span>Templates Included</div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prefix">[SYS]</div>
+    <div class="section-title">System Overview</div>
+    <div class="section-sub">5 components, built to work together</div>
+  </div>
+  <div class="section-body">
+    <div class="view-grid">
+      <div class="view-card">
+        <div class="view-num">01 //</div>
+        <div class="view-name">Portfolio Overview</div>
+        <div class="view-desc">Your live holdings snapshot. Every token you own, with current value, P&L, and portfolio weight at a glance. The command center.</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">02 //</div>
+        <div class="view-name">Trade Log</div>
+        <div class="view-desc">Every entry and exit recorded. Every trade has a thesis. Every exit has a rating. The place that makes you more honest about your performance.</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">03 //</div>
+        <div class="view-name">Token Watchlist</div>
+        <div class="view-desc">Tokens on your radar before you buy. Research notes, entry targets, risk factors, and competitor analysis organized and searchable.</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">04 //</div>
+        <div class="view-name">Decision Journal</div>
+        <div class="view-desc">The why behind every move. Pre-trade reasoning. Post-trade review. The journal separates investors from gamblers.</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">05 //</div>
+        <div class="view-name">Monthly Review</div>
+        <div class="view-desc">Your performance debrief. Portfolio snapshot, trades review, market context, rules check, and a single key lesson. Built into the system.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPONENT 1: PORTFOLIO OVERVIEW -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prefix">[01]</div>
+    <div class="section-title">Portfolio Overview</div>
+    <div class="section-sub">All properties · All views · Setup instructions</div>
+  </div>
+  <div class="section-body">
+
+    <p class="body-text">The Portfolio database is the center of the system. Every position you hold is a row. Properties track everything from current value to conviction level to investment thesis.</p>
+
+    <h4 style="font-family:'Courier New',monospace; font-size:11px; color:var(--mint); letter-spacing:3px; margin-bottom:16px;">PROPERTIES</h4>
+    <table class="data-table">
+      <thead><tr><th>Property Name</th><th>Type</th><th>Description / Formula</th></tr></thead>
+      <tbody>
+        <tr><td>Token Name</td><td><span class="property-type">Title</span></td><td>Full name (e.g., "Ethereum")</td></tr>
+        <tr><td>Ticker</td><td><span class="property-type">Text</span></td><td>Symbol (e.g., ETH)</td></tr>
+        <tr><td>Category</td><td><span class="property-type">Select</span></td><td>Layer 1 / Layer 2 / DeFi / NFT / Infrastructure / Stablecoin / Meme / AI / RWA</td></tr>
+        <tr><td>Chain</td><td><span class="property-type">Select</span></td><td>Ethereum / Solana / Bitcoin / Base / Arbitrum / Optimism / Avalanche / BSC / Sui / Other</td></tr>
+        <tr><td>Wallet / Exchange</td><td><span class="property-type">Select</span></td><td>Coinbase / Binance / Kraken / MetaMask / Phantom / Ledger Hardware / Cold Storage</td></tr>
+        <tr><td>Quantity Held</td><td><span class="property-type">Number</span></td><td>How many tokens you own</td></tr>
+        <tr><td>Average Buy Price</td><td><span class="property-type">Number</span></td><td>Your avg cost basis per token (USD)</td></tr>
+        <tr><td>Current Price</td><td><span class="property-type">Number</span></td><td>Update manually or note source</td></tr>
+        <tr><td>Current Value</td><td><span class="property-type formula">Formula</span></td><td class="formula"><span class="inline-code">Quantity Held × Current Price</span></td></tr>
+        <tr><td>Total Invested</td><td><span class="property-type formula">Formula</span></td><td class="formula"><span class="inline-code">Quantity Held × Average Buy Price</span></td></tr>
+        <tr><td>Unrealized P&L (USD)</td><td><span class="property-type formula">Formula</span></td><td class="formula"><span class="inline-code">Current Value - Total Invested</span></td></tr>
+        <tr><td>Unrealized P&L (%)</td><td><span class="property-type formula">Formula</span></td><td class="formula"><span class="inline-code">((Current Price - Avg Buy Price) / Avg Buy Price) × 100</span></td></tr>
+        <tr><td>Portfolio Weight %</td><td><span class="property-type">Number</span></td><td>% of total portfolio — update during weekly reviews</td></tr>
+        <tr><td>Status</td><td><span class="property-type">Select</span></td><td>Active / Sold / Staking / Locked</td></tr>
+        <tr><td>Risk Level</td><td><span class="property-type">Select</span></td><td>Low / Medium / High / Degen</td></tr>
+        <tr><td>Conviction Level</td><td><span class="property-type">Select</span></td><td>⭐ through ⭐⭐⭐⭐⭐</td></tr>
+        <tr><td>Entry Date</td><td><span class="property-type">Date</span></td><td>When you first bought</td></tr>
+        <tr><td>Target Price</td><td><span class="property-type">Number</span></td><td>Your take-profit target (USD)</td></tr>
+        <tr><td>Stop Level</td><td><span class="property-type">Number</span></td><td>Price where you'd reconsider the position</td></tr>
+        <tr><td>Thesis</td><td><span class="property-type">Text</span></td><td>1-2 sentence investment thesis. Write this before you buy.</td></tr>
+        <tr><td>Last Updated</td><td><span class="property-type">Date</span></td><td>When you last updated prices</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="font-family:'Courier New',monospace; font-size:11px; color:var(--mint); letter-spacing:3px; margin:24px 0 16px;">VIEWS TO BUILD</h4>
+    <div class="view-grid">
+      <div class="view-card">
+        <div class="view-num">VIEW 1</div>
+        <div class="view-name">"Active Holdings" (Default)</div>
+        <div class="view-desc">Filter: Status = Active · Sort: Current Value DESC<br>Show: Token Name, Ticker, Qty, Avg Buy, Current Price, P&L %, Portfolio Weight</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">VIEW 2</div>
+        <div class="view-name">"By Category"</div>
+        <div class="view-desc">Group by: Category · Sort by Current Value DESC within each group. See portfolio distribution at a glance.</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">VIEW 3</div>
+        <div class="view-name">"By Risk Level"</div>
+        <div class="view-desc">Group by: Risk Level · Color coded. See how aggressively you're positioned. The reality check view.</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">VIEW 4</div>
+        <div class="view-name">"Gains / Losses"</div>
+        <div class="view-desc">Sort: Unrealized P&L % DESC · Full P&L picture. Best performers at top, worst at bottom. No hiding from it.</div>
+      </div>
+      <div class="view-card">
+        <div class="view-num">VIEW 5</div>
+        <div class="view-name">"Needs Review"</div>
+        <div class="view-desc">Filter: Last Updated is before 7 days ago. Your weekly reminder to keep prices current.</div>
+      </div>
+    </div>
+
+    <h4 style="font-family:'Courier New',monospace; font-size:11px; color:var(--mint); letter-spacing:3px; margin:24px 0 16px;">SAMPLE DATA — 5 EXAMPLE POSITIONS</h4>
+    <div class="sample-portfolio">
+      <div class="portfolio-row">
+        <div class="token-rank">#1</div>
+        <div><div class="token-name">Ethereum</div><div class="token-ticker">ETH · Layer 1 · MetaMask + Ledger</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Current Value</div><div class="token-val">$15,300</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Avg Buy</div><div class="token-val">$2,100</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">P&amp;L</div><div class="token-pnl-pos">+$5,850 (+61.9%)</div></div>
+        <div><div class="token-weight">35% portfolio</div><div><span class="risk-badge risk-med">Medium</span></div></div>
+      </div>
+      <div class="portfolio-row">
+        <div class="token-rank">#2</div>
+        <div><div class="token-name">Solana</div><div class="token-ticker">SOL · Layer 1 · Phantom</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Current Value</div><div class="token-val">$14,620</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Avg Buy</div><div class="token-val">$68</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">P&amp;L</div><div class="token-pnl-pos">+$8,840 (+152.9%)</div></div>
+        <div><div class="token-weight">33% portfolio</div><div><span class="risk-badge risk-med">Medium</span></div></div>
+      </div>
+      <div class="portfolio-row">
+        <div class="token-rank">#3</div>
+        <div><div class="token-name">Pendle Finance</div><div class="token-ticker">PENDLE · DeFi · Arbitrum · MetaMask</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Current Value</div><div class="token-val">$10,200</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Avg Buy</div><div class="token-val">$4.20</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">P&amp;L</div><div class="token-pnl-pos">+$3,900 (+61.9%)</div></div>
+        <div><div class="token-weight">23.5% portfolio</div><div><span class="risk-badge risk-high">High</span></div></div>
+      </div>
+      <div class="portfolio-row">
+        <div class="token-rank">#4</div>
+        <div><div class="token-name">Chainlink</div><div class="token-ticker">LINK · Infrastructure · Coinbase</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Current Value</div><div class="token-val">$3,240</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Avg Buy</div><div class="token-val">$8.50</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">P&amp;L</div><div class="token-pnl-pos">+$1,540 (+90.6%)</div></div>
+        <div><div class="token-weight">7.5% portfolio</div><div><span class="risk-badge risk-low">Low</span></div></div>
+      </div>
+      <div class="portfolio-row">
+        <div class="token-rank">#5</div>
+        <div><div class="token-name">Dogecoin</div><div class="token-ticker">DOGE · Meme · Coinbase</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Current Value</div><div class="token-val">$700</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">Avg Buy</div><div class="token-val">$0.095</div></div>
+        <div><div style="font-size:11px;color:var(--gray);">P&amp;L</div><div class="token-pnl-pos">+$225 (+47.4%)</div></div>
+        <div><div class="token-weight">1% portfolio</div><div><span class="risk-badge risk-degen">Degen</span></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- COMPONENT 2: TRADE LOG -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prefix">[02]</div>
+    <div class="section-title">Trade Log</div>
+    <div class="section-sub">Every entry and exit recorded</div>
+  </div>
+  <div class="section-body">
+
+    <p class="body-text">The Trade Log is where you record every trade with context — not just what you bought, but why, what triggered it, and how it turned out. Patterns emerge from data. This is the data.</p>
+
+    <h4 style="font-family:'Courier New',monospace; font-size:11px; color:var(--mint); letter-spacing:3px; margin-bottom:16px;">PROPERTIES</h4>
+    <table class="data-table">
+      <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Trade ID</td><td><span class="property-type">Title</span></td><td>Number sequentially: TRD-001, TRD-002, etc.</td></tr>
+        <tr><td>Token</td><td><span class="property-type">Text</span></td><td>Which token (e.g., "SOL")</td></tr>
+        <tr><td>Direction</td><td><span class="property-type">Select</span></td><td>Buy / Sell / Swap / Transfer In / Transfer Out</td></tr>
+        <tr><td>Date</td><td><span class="property-type">Date</span></td><td>When the trade executed</td></tr>
+        <tr><td>Quantity</td><td><span class="property-type">Number</span></td><td>How many tokens</td></tr>
+        <tr><td>Price Per Token</td><td><span class="property-type">Number</span></td><td>Execution price (USD)</td></tr>
+        <tr><td>Total Value</td><td><span class="property-type formula">Formula</span></td><td class="formula"><span class="inline-code">Quantity × Price Per Token</span></td></tr>
+        <tr><td>Fee</td><td><span class="property-type">Number</span></td><td>Gas / exchange fee (USD)</td></tr>
+        <tr><td>Trade Type</td><td><span class="property-type">Select</span></td><td>Spot / Limit / DCA Entry / DCA Exit / Swing / Arbitrage / Airdrop</td></tr>
+        <tr><td>Realized P&L</td><td><span class="property-type">Number</span></td><td>Fill in when closing a position (USD)</td></tr>
+        <tr><td>Trigger / Signal</td><td><span class="property-type">Text</span></td><td>What triggered this trade? Be honest.</td></tr>
+        <tr><td>Thesis</td><td><span class="property-type">Text</span></td><td>Why did you make this trade? Write this before you confirm.</td></tr>
+        <tr><td>Outcome Notes</td><td><span class="property-type">Text</span></td><td>After the fact: what happened, what you learned</td></tr>
+        <tr><td>Rating</td><td><span class="property-type">Select</span></td><td>🏆 Great / ✅ Good / ➖ Neutral / ⚠️ Mistake / 💀 Disaster</td></tr>
+        <tr><td>Tax Lot</td><td><span class="property-type">Text</span></td><td>For tax tracking (e.g., "FIFO-2024-03")</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="font-family:'Courier New',monospace; font-size:11px; color:var(--mint); letter-spacing:3px; margin:24px 0 16px;">VIEWS</h4>
+    <div class="view-grid">
+      <div class="view-card"><div class="view-num">VIEW 1</div><div class="view-name">All Trades (Default)</div><div class="view-desc">Sort: Date DESC · Token, Direction, Date, Qty, Price, Total Value, Rating</div></div>
+      <div class="view-card"><div class="view-num">VIEW 2</div><div class="view-name">This Month</div><div class="view-desc">Filter: Date = This Month · Group by: Direction</div></div>
+      <div class="view-card"><div class="view-num">VIEW 3</div><div class="view-name">Sells Only</div><div class="view-desc">Filter: Direction = Sell · Sort: Realized P&L % DESC</div></div>
+      <div class="view-card"><div class="view-num">VIEW 4</div><div class="view-name">Mistakes Log</div><div class="view-desc">Filter: Rating = Mistake OR Disaster · For monthly review learning sessions</div></div>
+      <div class="view-card"><div class="view-num">VIEW 5</div><div class="view-name">By Token</div><div class="view-desc">Group by: Token · See all trade history per token</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- COMPONENT 3: WATCHLIST -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prefix">[03]</div>
+    <div class="section-title">Token Watchlist</div>
+    <div class="section-sub">Research before you buy</div>
+  </div>
+  <div class="section-body">
+
+    <p class="body-text">The Watchlist is your research pipeline. Tokens you're tracking before committing capital. The MC/FDV ratio, vesting status, and risk factors columns are what separate research from speculation.</p>
+
+    <table class="data-table">
+      <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Token Name</td><td><span class="property-type">Title</span></td><td>Full project name</td></tr>
+        <tr><td>Ticker</td><td><span class="property-type">Text</span></td><td>Symbol</td></tr>
+        <tr><td>Why I'm Watching</td><td><span class="property-type">Text</span></td><td>Your initial thesis / interest — write this when you add it</td></tr>
+        <tr><td>Target Entry Price</td><td><span class="property-type">Number</span></td><td>Price you'd want to buy at (USD)</td></tr>
+        <tr><td>Market Cap</td><td><span class="property-type">Number</span></td><td>In millions USD</td></tr>
+        <tr><td>FDV</td><td><span class="property-type">Number</span></td><td>Fully diluted valuation in millions</td></tr>
+        <tr><td>MC / FDV Ratio</td><td><span class="property-type formula">Formula</span></td><td class="formula"><span class="inline-code">Market Cap / FDV</span> — lower = more unlocks coming</td></tr>
+        <tr><td>Vesting Status</td><td><span class="property-type">Text</span></td><td>Key lockup/unlock info — when does team/VC unlock?</td></tr>
+        <tr><td>Status</td><td><span class="property-type">Select</span></td><td>🔥 Watching / ⏸️ Passed / ✅ Bought / 📉 Too Late / 🗃️ Archive</td></tr>
+        <tr><td>Priority</td><td><span class="property-type">Select</span></td><td>🔴 Hot (daily) / 🟡 Medium (weekly) / 🟢 Low / ⬛ Archive</td></tr>
+        <tr><td>Research Notes</td><td><span class="property-type">Text</span></td><td>Freeform notes on the project — the more detail, the better your decision</td></tr>
+        <tr><td>Risk Factors</td><td><span class="property-type">Text</span></td><td>What could go wrong? Write this before you're bullish on it.</td></tr>
+        <tr><td>Competitors</td><td><span class="property-type">Text</span></td><td>Who are they competing with? How do they win?</td></tr>
+        <tr><td>Edge</td><td><span class="property-type">Text</span></td><td>What's their actual technical or market edge? Be specific.</td></tr>
+        <tr><td>Alert Set?</td><td><span class="property-type">Checkbox</span></td><td>Have you set a price alert on your exchange?</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- COMPONENT 4: DECISION JOURNAL -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prefix">[04]</div>
+    <div class="section-title">Decision Journal Template</div>
+    <div class="section-sub">Write before you buy. Review after you sell.</div>
+  </div>
+  <div class="section-body">
+
+    <p class="body-text">The Decision Journal is the single habit that separates investors who survive multiple cycles from those who don't. You write your thesis before the trade. You review the outcome after. Over time, patterns emerge — and you can't argue with your own writing.</p>
+
+    <div class="journal-block">
+<span class="j-title"># [DECISION TITLE] — [DATE]</span>
+
+<span class="j-section">## THE DECISION</span>
+<span class="j-placeholder">What exactly am I deciding? Be specific: "Buy 500 PENDLE at $4.20 on Arbitrum via Uniswap"</span>
+→ <span class="j-fill">_______________________________________</span>
+
+<span class="j-section">## CONTEXT</span>
+<span class="j-placeholder">Market conditions now? What information am I working with?</span>
+→ <span class="j-fill">_______________________________________</span>
+
+<span class="j-section">## MY THESIS</span>
+<span class="j-placeholder">Why do I believe this is the right move? At least 3 specific reasons.</span>
+1. <span class="j-fill">_______________________________________</span>
+2. <span class="j-fill">_______________________________________</span>
+3. <span class="j-fill">_______________________________________</span>
+
+<span class="j-section">## OPPOSING VIEW</span>
+<span class="j-placeholder">What would a smart person who disagrees say? Write their strongest argument.</span>
+→ <span class="j-fill">_______________________________________</span>
+
+<span class="j-section">## RISK ASSESSMENT</span>
+Position size: <span class="j-placeholder">___ % of portfolio</span>
+Max loss acceptable: <span class="j-placeholder">$___</span>
+Time horizon: <span class="j-placeholder">___</span>
+Conviction (1-10): <span class="j-placeholder">___</span>
+
+<span class="j-section">## WHAT WOULD MAKE ME WRONG?</span>
+<span class="j-placeholder">Specific conditions where this thesis breaks down. Not vague — specific.</span>
+→ <span class="j-fill">_______________________________________</span>
+
+<span class="j-section">## EXIT PLAN (set before you enter)</span>
+Take profit: <span class="j-placeholder">$___</span>
+Stop loss: <span class="j-placeholder">$___</span>
+Time-based exit: <span class="j-placeholder">If nothing happens in ___ months, I sell</span>
+Thesis invalidation: <span class="j-placeholder">If [condition], I sell regardless of price</span>
+
+<span class="comment">─────────────────────────────────────────</span>
+<span class="j-section">## POST-DECISION REVIEW (fill in later)</span>
+Date of Review: <span class="j-fill">_______</span>
+What actually happened: <span class="j-fill">_______________________</span>
+Was my thesis right? <span class="j-placeholder">Yes / Partially / No</span>
+What I'd do differently: <span class="j-fill">_______________________</span>
+Key lesson: <span class="j-fill">_______________________________</span></div>
+
+  </div>
+</div>
+
+<!-- COMPONENT 5: MONTHLY REVIEW -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prefix">[05]</div>
+    <div class="section-title">Monthly Review Template</div>
+    <div class="section-sub">First of every month. Takes 30-45 minutes. Worth every minute.</div>
+  </div>
+  <div class="section-body">
+
+    <p class="body-text">The Monthly Review is how you go from a collection of trades to an actual investment practice. You can't see patterns in real time — you need the forced pause of a monthly review to see them.</p>
+
+    <div class="journal-block">
+<span class="j-title"># Monthly Review — [MONTH YEAR]</span>
+
+<span class="j-section">## PORTFOLIO SNAPSHOT</span></div>
+    <table class="review-table">
+      <tbody>
+        <tr><td>Total Portfolio Value</td><td>Start of Month: $___</td><td>End of Month: $___</td><td>Change: ___</td></tr>
+        <tr><td># of Positions</td><td>Start: ___</td><td>End: ___</td><td>Change: ___</td></tr>
+        <tr><td>Largest Position</td><td colspan="2">Token name + %</td><td>Change vs. last month</td></tr>
+        <tr><td>Cash / Stables %</td><td>Start: ___</td><td>End: ___</td><td>Target: ___</td></tr>
+      </tbody>
+    </table>
+
+    <div class="journal-block" style="margin-top:20px;">
+<span class="j-section">## PERFORMANCE</span>
+Total P&L This Month — Unrealized: $<span class="j-fill">___</span> · Realized: $<span class="j-fill">___</span> · Total: $<span class="j-fill">___</span> (<span class="j-fill">_</span>%)
+
+Best Performer: <span class="j-fill">Token: ___ · Return: ___% · Why it worked: _______________</span>
+Worst Performer: <span class="j-fill">Token: ___ · Return: ___% · What went wrong: _______________</span>
+
+Trades Made: <span class="j-fill">___</span> · Winning: <span class="j-fill">___</span> (<span class="j-fill">__</span>%) · Losing: <span class="j-fill">___</span> (<span class="j-fill">__</span>%)
+
+<span class="j-section">## DECISIONS REVIEW</span>
+Trades I'm proud of:
+1. <span class="j-fill">_______________________________________________</span>
+2. <span class="j-fill">_______________________________________________</span>
+
+Trades I regret:
+1. <span class="j-fill">_______________________________________________</span>
+2. <span class="j-fill">_______________________________________________</span>
+
+<span class="j-section">## MARKET CONTEXT</span>
+What was the macro backdrop this month?
+→ <span class="j-fill">_______________________________________________</span>
+
+Key narratives that moved markets:
+1. <span class="j-fill">___</span>  2. <span class="j-fill">___</span>  3. <span class="j-fill">___</span>
+
+My read vs. what actually happened:
+→ <span class="j-fill">_______________________________________________</span>
+
+<span class="j-section">## NEXT MONTH PLAN</span>
+My conviction level heading into next month (1-10): <span class="j-fill">___</span>
+Why: <span class="j-fill">_______________________________________________</span>
+
+Positions I might add to: <span class="j-fill">_______________</span>
+Positions I might reduce: <span class="j-fill">_______________</span>
+
+<span class="j-section">## RULES CHECK</span>
+<span class="j-placeholder">Review your personal trading rules. Did you follow them?</span>
+[ ] Never invest more than X% in one token — <span class="j-fill">✅/❌</span>
+[ ] Always set a stop before entering — <span class="j-fill">✅/❌</span>
+[ ] Never trade on FOMO — <span class="j-fill">✅/❌</span>
+[ ] Do your own research before buying — <span class="j-fill">✅/❌</span>
+
+Overall process grade: <span class="j-fill">A / B / C / D / F</span>
+
+<span class="j-section">## ONE KEY LESSON</span>
+The single most important thing I learned this month:
+→ <span class="j-fill">_______________________________________________</span></div>
+
+  </div>
+</div>
+
+<!-- SETUP & MAINTENANCE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prefix">[SYS]</div>
+    <div class="section-title">Setup Guide</div>
+    <div class="section-sub">Configure once. Use forever.</div>
+  </div>
+  <div class="section-body">
+
+    <div class="setup-steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Build Your 5 Databases</div>
+          <div class="step-desc">Create databases in your note-taking tool of choice (Notion, Obsidian, Airtable, or any spreadsheet). Follow the property definitions exactly. Formulas are provided — copy them as-is.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Configure Your Settings Page</div>
+          <div class="step-desc">Create a Settings page. Fill in: your name/handle, portfolio start date, portfolio target (e.g., "Reach $100K by EOY"), your personal trading rules (5-10 rules you commit to), your risk tolerance.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">Enter Your Current Positions</div>
+          <div class="step-desc">Enter every position in your Portfolio database. For each: fill every property. For Thesis — write it now even if you can't remember why you bought it. The honesty of trying will surface insight.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">Log Historical Trades</div>
+          <div class="step-desc">For each position, log at minimum the original buy as a trade in your Trade Log. This gives you a complete history going forward. No need to reconstruct everything from memory.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">Set Up Your Dashboard</div>
+          <div class="step-desc">Create a Dashboard page. Add linked views: Active Holdings, Recent Trades (last 30 days), Hot Watchlist, and a Portfolio Summary block with Total Value, P&L, and Position Count. Bookmark it. This is your home.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <div class="step-title">Set Your Weekly Reminder</div>
+          <div class="step-desc">Every Sunday: Update current prices. Log any trades from the week. First of every month: Complete the Monthly Review. This system only works if you maintain it. 15 minutes weekly, 45 minutes monthly.</div>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="font-family:'Courier New',monospace; font-size:11px; color:var(--mint); letter-spacing:3px; margin:32px 0 16px;">MAINTENANCE SCHEDULE</h4>
+    <div class="maintenance-grid">
+      <div class="maint-card">
+        <div class="maint-freq">DAILY</div>
+        <div class="maint-time">5 minutes</div>
+        <ul class="maint-tasks">
+          <li>Check Dashboard if you made trades</li>
+          <li>Log any new trades immediately</li>
+          <li>Don't batch trades — log same day</li>
+        </ul>
+      </div>
+      <div class="maint-card">
+        <div class="maint-freq">WEEKLY</div>
+        <div class="maint-time">15 minutes</div>
+        <ul class="maint-tasks">
+          <li>Update current prices for all active positions</li>
+          <li>Review Watchlist for new entries</li>
+          <li>Update portfolio weight %</li>
+        </ul>
+      </div>
+      <div class="maint-card">
+        <div class="maint-freq">MONTHLY</div>
+        <div class="maint-time">30-45 minutes</div>
+        <ul class="maint-tasks">
+          <li>Complete Monthly Review template</li>
+          <li>Archive sold positions (Status = Sold)</li>
+          <li>Clean up Watchlist</li>
+          <li>Update personal trading rules if needed</li>
+        </ul>
+      </div>
+      <div class="maint-card">
+        <div class="maint-freq">QUARTERLY</div>
+        <div class="maint-time">90 minutes</div>
+        <ul class="maint-tasks">
+          <li>Deep dive: Trade Log patterns</li>
+          <li>Calculate tax lot info for realized gains</li>
+          <li>Review conviction levels — still bullish?</li>
+          <li>Assess portfolio vs. your original thesis</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4 style="font-family:'Courier New',monospace; font-size:11px; color:var(--mint); letter-spacing:3px; margin:32px 0 16px;">PERSONAL TRADING RULES (TEMPLATE)</h4>
+    <div class="rules-block">
+      <h4>RULES TO START WITH — CUSTOMIZE FOR YOUR STYLE</h4>
+      <div class="rule-item"><div class="rule-num">1.</div><div>Never invest more than 10% of portfolio in a single position</div></div>
+      <div class="rule-item"><div class="rule-num">2.</div><div>Always know why before you buy — write the thesis first</div></div>
+      <div class="rule-item"><div class="rule-num">3.</div><div>Set your exit before you enter — target price AND stop level</div></div>
+      <div class="rule-item"><div class="rule-num">4.</div><div>Don't average down on -50%+ positions without writing a new thesis</div></div>
+      <div class="rule-item"><div class="rule-num">5.</div><div>Review every trade in the journal within 48 hours</div></div>
+      <div class="rule-item"><div class="rule-num">6.</div><div>Never hold more than [X]% in meme/degen positions at any time</div></div>
+      <div class="rule-item"><div class="rule-num">7.</div><div>If you're checking price more than 3× a day, your position is too big</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <div class="footer-brand">LEDGER</div>
+    <div class="footer-tagline">// Your portfolio. Your proof.</div>
+  </div>
+  <div class="footer-meta">
+    Built by Marcus Wei · $29<br>
+    5 Components · Complete System<br>
+    "If you can't measure it, you can't manage it."
+  </div>
+</div>
+
+</body>
+</html>
