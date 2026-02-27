@@ -78,60 +78,110 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+    import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+    import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+    // Init RectAreaLight support
+    RectAreaLightUniformsLib.init();
 
     // Scene
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.001, 100);
-    camera.position.set(0.4, 0.25, 0.5);
+    const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.001, 100);
+    camera.position.set(0.4, 0.22, 0.5);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.4;
+    renderer.toneMappingExposure = 1.2;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.getElementById('canvas-wrap').appendChild(renderer.domElement);
+
+    // Post-processing (bloom for screen glow)
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+    
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.3,   // strength (subtle)
+      0.5,   // radius
+      0.85   // threshold
+    );
+    composer.addPass(bloomPass);
 
     // Controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+    controls.dampingFactor = 0.04;
     controls.minDistance = 0.05;
     controls.maxDistance = 3;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.2;
+    controls.autoRotateSpeed = 0.8;  // slower, smoother
+    controls.maxPolarAngle = Math.PI * 0.85;
 
-    // Stop auto-rotate on interaction
+    // Stop auto-rotate on interaction, resume after idle
     let interacted = false;
+    let idleTimer = null;
     renderer.domElement.addEventListener('pointerdown', () => {
       interacted = true;
       controls.autoRotate = false;
       document.getElementById('hint').style.opacity = '0';
+      clearTimeout(idleTimer);
+    });
+    renderer.domElement.addEventListener('pointerup', () => {
+      idleTimer = setTimeout(() => {
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+      }, 5000);
     });
 
-    // Lighting - studio setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    // HDRI Environment
+    const rgbeLoader = new RGBELoader();
+    rgbeLoader.load('assets/hdri/studio.hdr', (texture) => {
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+      scene.environment = texture;
+      // Don't set as background - keep dark background
+    });
+
+    // Studio Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.15);
     scene.add(ambientLight);
 
-    // Key light (warm, from top-right)
-    const keyLight = new THREE.DirectionalLight(0xfff5e6, 1.8);
-    keyLight.position.set(1, 2, 1.5);
+    // Key light (warm, from top-right) - RectAreaLight for studio look
+    const keyLight = new THREE.RectAreaLight(0xfff5e6, 8, 0.5, 0.5);
+    keyLight.position.set(0.8, 1.2, 1);
+    keyLight.lookAt(0, 0, 0);
     scene.add(keyLight);
 
     // Fill light (cool, from left)
-    const fillLight = new THREE.DirectionalLight(0xe6eeff, 0.8);
-    fillLight.position.set(-1.5, 0.5, 0.5);
+    const fillLight = new THREE.RectAreaLight(0xe6eeff, 3, 0.8, 0.8);
+    fillLight.position.set(-1.2, 0.4, 0.3);
+    fillLight.lookAt(0, 0, 0);
     scene.add(fillLight);
 
     // Rim light (from behind)
-    const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.5);
     rimLight.position.set(0, 0.5, -2);
     scene.add(rimLight);
 
-    // Ground reflection plane (subtle)
+    // Bottom fill (subtle, prevents harsh shadows)
+    const bottomFill = new THREE.RectAreaLight(0x8899aa, 1.5, 1, 1);
+    bottomFill.position.set(0, -0.3, 0.5);
+    bottomFill.lookAt(0, 0.1, 0);
+    scene.add(bottomFill);
+
+    // Ground plane (dark, slightly reflective)
     const groundGeo = new THREE.PlaneGeometry(4, 4);
     const groundMat = new THREE.MeshStandardMaterial({
-      color: 0x111111, roughness: 0.8, metalness: 0.0
+      color: 0x0c0c0e, roughness: 0.3, metalness: 0.1,
+      envMapIntensity: 0.3
     });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
@@ -139,21 +189,19 @@
     ground.receiveShadow = true;
     scene.add(ground);
 
-    // Gradient background via a large sphere
+    // Background sphere
     const bgGeo = new THREE.SphereGeometry(50, 32, 32);
-    const bgMat = new THREE.MeshBasicMaterial({
-      color: 0x0a0a0a, side: THREE.BackSide
-    });
+    const bgMat = new THREE.MeshBasicMaterial({ color: 0x080810, side: THREE.BackSide });
     scene.add(new THREE.Mesh(bgGeo, bgMat));
 
     // Model loading
-    const loader = new GLTFLoader();
+    const gltfLoader = new GLTFLoader();
     let currentModel = null;
     const loaderEl = document.getElementById('loader');
 
     const models = {
-      macbook: { path: 'assets/models/macbook.glb', scale: 1, camDist: 0.5 },
-      iphone: { path: 'assets/models/iphone.glb', scale: 1, camDist: 0.3 },
+      macbook: { path: 'assets/models/macbook.glb', scale: 1 },
+      iphone: { path: 'assets/models/iphone.glb', scale: 1 },
     };
 
     const defaultCamPos = {
@@ -170,7 +218,7 @@
       }
 
       const cfg = models[name];
-      loader.load(cfg.path, (gltf) => {
+      gltfLoader.load(cfg.path, (gltf) => {
         const model = gltf.scene;
         model.scale.setScalar(cfg.scale);
 
@@ -183,10 +231,21 @@
         const boxAfter = new THREE.Box3().setFromObject(model);
         model.position.y -= boxAfter.min.y;
 
+        // Enable environment maps on all materials
+        model.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              child.material.envMapIntensity = 1.0;
+            }
+          }
+        });
+
         scene.add(model);
         currentModel = model;
         
-        // Adjust camera
+        // Smooth camera transition
         const cam = defaultCamPos[name] || defaultCamPos.macbook;
         if (!interacted) {
           camera.position.set(cam.x, cam.y, cam.z);
@@ -208,6 +267,7 @@
         btn.classList.add('active');
         interacted = false;
         controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.8;
         document.getElementById('hint').style.opacity = '1';
         loadModel(btn.dataset.model);
       });
@@ -218,13 +278,14 @@
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
     });
 
     // Animate
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
-      renderer.render(scene, camera);
+      composer.render();  // Use composer instead of renderer for bloom
     }
     animate();
 
