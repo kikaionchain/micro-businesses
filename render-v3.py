@@ -1,11 +1,16 @@
 import bpy, bmesh, math, os
 
+import sys
+
 # === CONFIG ===
 PROJECT_DIR = "/Users/kikai/clawd/projects/micro-businesses"
-SCREENSHOT = os.path.join(PROJECT_DIR, "assets/screenshots/02-draft-hero.png")
+# Accept command line args: screenshot_path output_path [camera_preset]
+args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+SCREENSHOT = args[0] if len(args) > 0 else os.path.join(PROJECT_DIR, "assets/screenshots/02-draft-hero.png")
+OUTPUT_PATH = args[1] if len(args) > 1 else "/tmp/test-render.jpg"
+CAMERA_PRESET = args[2] if len(args) > 2 else "hero"  # hero, front, left
 HDRI_PATH = os.path.join(PROJECT_DIR, "assets/hdri/studio.hdr")
-OUTPUT_PATH = "/tmp/test-render.jpg"
-FAST_MODE = True  # set False for final render
+FAST_MODE = len(args) == 0  # fast for test, final for batch
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
@@ -21,7 +26,7 @@ try:
     scene.cycles.device = 'GPU'
 except: pass
 
-scene.cycles.samples = 96 if FAST_MODE else 256
+scene.cycles.samples = 128 if FAST_MODE else 256
 scene.cycles.use_denoising = True
 scene.render.resolution_x = 2400
 scene.render.resolution_y = 1350
@@ -71,16 +76,9 @@ def mat_screen(img_path):
     n = mat.node_tree.nodes; l = mat.node_tree.links; n.clear()
     out = n.new('ShaderNodeOutputMaterial')
     
-    # Mix emission (screen content) with glossy (glass reflection)
-    mix = n.new('ShaderNodeMixShader')
-    mix.inputs['Fac'].default_value = 0.03  # 3% subtle reflection
-    
+    # Pure emission - screen IS a light source
     emit = n.new('ShaderNodeEmission')
-    emit.inputs['Strength'].default_value = 3.0
-    
-    glossy = n.new('ShaderNodeBsdfGlossy')
-    glossy.inputs['Color'].default_value = (1, 1, 1, 1)
-    glossy.inputs['Roughness'].default_value = 0.05
+    emit.inputs['Strength'].default_value = 20.0
     
     tex = n.new('ShaderNodeTexImage')
     if os.path.exists(img_path):
@@ -88,9 +86,7 @@ def mat_screen(img_path):
         print(f"Loaded screenshot: {img_path}")
     
     l.new(tex.outputs['Color'], emit.inputs['Color'])
-    l.new(emit.outputs[0], mix.inputs[1])
-    l.new(glossy.outputs[0], mix.inputs[2])
-    l.new(mix.outputs[0], out.inputs[0])
+    l.new(emit.outputs[0], out.inputs[0])
     return mat
 
 # === GEOMETRY ===
@@ -195,7 +191,7 @@ def create_screen_ws(img_path):
     scr.name = "Screen"
     
     # Scale to match actual screenshot aspect ratio (1020x544 = 1.875:1)
-    screen_width = 0.300  # fill bezel edge to edge
+    screen_width = 0.305  # fill bezel edge to edge, slightly overflow for safety
     screen_height = screen_width / 1.875
     scr.scale = (screen_width, screen_height, 1)
     
@@ -315,7 +311,7 @@ scene.world = world
 wn = world.node_tree.nodes; wl = world.node_tree.links; wn.clear()
 out_w = wn.new('ShaderNodeOutputWorld')
 bg = wn.new('ShaderNodeBackground')
-bg.inputs['Strength'].default_value = 0.5
+bg.inputs['Strength'].default_value = 0.3
 env = wn.new('ShaderNodeTexEnvironment')
 if os.path.exists(HDRI_PATH):
     env.image = bpy.data.images.load(HDRI_PATH)
@@ -331,29 +327,54 @@ wl.new(bg.outputs['Background'], out_w.inputs['Surface'])
 # === LIGHTS ===
 bpy.ops.object.light_add(type='AREA', location=(0.6, -0.4, 0.6))
 k = bpy.context.active_object
-k.data.energy = 50; k.data.size = 0.5
+k.data.energy = 12; k.data.size = 0.5
 k.rotation_euler = (math.radians(50), 0, math.radians(25))
 
 bpy.ops.object.light_add(type='AREA', location=(-0.5, -0.3, 0.45))
 f = bpy.context.active_object
-f.data.energy = 18; f.data.size = 0.7
+f.data.energy = 6; f.data.size = 0.7
 f.rotation_euler = (math.radians(55), 0, math.radians(-30))
 
 bpy.ops.object.light_add(type='AREA', location=(-0.15, 0.6, 0.3))
 r = bpy.context.active_object
-r.data.energy = 30; r.data.size = 0.4
+r.data.energy = 15; r.data.size = 0.4
 r.rotation_euler = (math.radians(110), 0, 0)
 
+# Screen spill light (simulates screen glow on keyboard)
+# Right edge rim light
+bpy.ops.object.light_add(type='AREA', location=(0.25, 0.1, 0.15))
+rim2 = bpy.context.active_object
+rim2.name = "RimRight"
+rim2.data.energy = 5
+rim2.data.size = 0.15
+rim2.rotation_euler = (math.radians(80), 0, math.radians(-90))
+
+# Screen spill - positioned where screen meets keyboard, pointing down
+bpy.ops.object.light_add(type='AREA', location=(0, HINGE_Y - 0.02, HINGE_Z + 0.03))
+spill = bpy.context.active_object
+spill.name = "ScreenSpill"
+spill.data.energy = 12
+spill.data.size = 0.28  # wide as keyboard
+spill.data.size_y = 0.10
+spill.data.color = (0.85, 0.82, 0.7)
+spill.rotation_euler = (math.radians(-70), 0, 0)  # steep angle down onto keyboard
+
 # === CAMERA ===
-bpy.ops.object.camera_add(location=(0.45, -0.55, 0.35))
+CAMERA_PRESETS = {
+    "hero": {"loc": (0.45, -0.55, 0.35), "target": (0, 0.02, 0.10), "lens": 55},
+    "front": {"loc": (0.05, -0.65, 0.25), "target": (0, 0.02, 0.10), "lens": 60},
+    "left": {"loc": (-0.40, -0.50, 0.30), "target": (0, 0.02, 0.10), "lens": 55},
+}
+cp = CAMERA_PRESETS.get(CAMERA_PRESET, CAMERA_PRESETS["hero"])
+bpy.ops.object.camera_add(location=cp["loc"])
 cam = bpy.context.active_object
-bpy.ops.object.empty_add(location=(0, 0.02, 0.10))
+bpy.ops.object.empty_add(location=cp["target"])
 target = bpy.context.active_object
 track = cam.constraints.new('TRACK_TO')
 track.target = target
 track.track_axis = 'TRACK_NEGATIVE_Z'
 track.up_axis = 'UP_Y'
-cam.data.lens = 55
+cam.data.lens = cp["lens"]
 cam.data.dof.use_dof = True
 cam.data.dof.focus_object = target
 cam.data.dof.aperture_fstop = 11.0
