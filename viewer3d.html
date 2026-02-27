@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Product Viewer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow: hidden; }
+    #canvas-wrap { width: 100vw; height: 100vh; }
+    
+    .ui-top {
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 10;
+    }
+    .model-btn {
+      padding: 10px 24px; border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05); color: #aaa;
+      border-radius: 8px; cursor: pointer; font-size: 14px;
+      backdrop-filter: blur(12px); transition: all 0.2s;
+      font-family: inherit; letter-spacing: 0.5px;
+    }
+    .model-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .model-btn.active { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3); }
+    
+    .hint {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.3); font-size: 13px; z-index: 10;
+      pointer-events: none; transition: opacity 0.5s;
+    }
+    
+    .loader {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+    .loader .spinner {
+      width: 32px; height: 32px; border: 2px solid rgba(255,255,255,0.1);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .loader .label { color: rgba(255,255,255,0.5); font-size: 13px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .title {
+      position: fixed; top: 24px; right: 32px; z-index: 10;
+      font-size: 12px; color: rgba(255,255,255,0.25); letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">Kikai · 3D Viewer</div>
+  
+  <div class="ui-top" id="model-selector">
+    <button class="model-btn active" data-model="macbook">MacBook Pro</button>
+    <button class="model-btn" data-model="iphone">iPhone 15 Pro</button>
+  </div>
+  
+  <div class="hint" id="hint">Drag to rotate · Scroll to zoom · Right-click to pan</div>
+  
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <div class="label">Loading model…</div>
+  </div>
+  
+  <div id="canvas-wrap"></div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+    }
+  }
+  </script>
+  
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    // Scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.001, 100);
+    camera.position.set(0.4, 0.25, 0.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.4;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    document.getElementById('canvas-wrap').appendChild(renderer.domElement);
+
+    // Controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 0.05;
+    controls.maxDistance = 3;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.2;
+
+    // Stop auto-rotate on interaction
+    let interacted = false;
+    renderer.domElement.addEventListener('pointerdown', () => {
+      interacted = true;
+      controls.autoRotate = false;
+      document.getElementById('hint').style.opacity = '0';
+    });
+
+    // Lighting - studio setup
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambientLight);
+
+    // Key light (warm, from top-right)
+    const keyLight = new THREE.DirectionalLight(0xfff5e6, 1.8);
+    keyLight.position.set(1, 2, 1.5);
+    scene.add(keyLight);
+
+    // Fill light (cool, from left)
+    const fillLight = new THREE.DirectionalLight(0xe6eeff, 0.8);
+    fillLight.position.set(-1.5, 0.5, 0.5);
+    scene.add(fillLight);
+
+    // Rim light (from behind)
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    rimLight.position.set(0, 0.5, -2);
+    scene.add(rimLight);
+
+    // Ground reflection plane (subtle)
+    const groundGeo = new THREE.PlaneGeometry(4, 4);
+    const groundMat = new THREE.MeshStandardMaterial({
+      color: 0x111111, roughness: 0.8, metalness: 0.0
+    });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -0.02;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // Gradient background via a large sphere
+    const bgGeo = new THREE.SphereGeometry(50, 32, 32);
+    const bgMat = new THREE.MeshBasicMaterial({
+      color: 0x0a0a0a, side: THREE.BackSide
+    });
+    scene.add(new THREE.Mesh(bgGeo, bgMat));
+
+    // Model loading
+    const loader = new GLTFLoader();
+    let currentModel = null;
+    const loaderEl = document.getElementById('loader');
+
+    const models = {
+      macbook: { path: 'assets/models/macbook.glb', scale: 1, camDist: 0.5 },
+      iphone: { path: 'assets/models/iphone.glb', scale: 1, camDist: 0.3 },
+    };
+
+    const defaultCamPos = {
+      macbook: { x: 0.35, y: 0.2, z: 0.45 },
+      iphone: { x: 0.15, y: 0.08, z: 0.2 },
+    };
+
+    function loadModel(name) {
+      loaderEl.style.display = 'flex';
+      
+      if (currentModel) {
+        scene.remove(currentModel);
+        currentModel = null;
+      }
+
+      const cfg = models[name];
+      loader.load(cfg.path, (gltf) => {
+        const model = gltf.scene;
+        model.scale.setScalar(cfg.scale);
+
+        // Center model
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
+        
+        // Place on ground
+        const boxAfter = new THREE.Box3().setFromObject(model);
+        model.position.y -= boxAfter.min.y;
+
+        scene.add(model);
+        currentModel = model;
+        
+        // Adjust camera
+        const cam = defaultCamPos[name] || defaultCamPos.macbook;
+        if (!interacted) {
+          camera.position.set(cam.x, cam.y, cam.z);
+          controls.target.set(0, (boxAfter.max.y - boxAfter.min.y) / 2, 0);
+        }
+        controls.update();
+
+        loaderEl.style.display = 'none';
+      }, undefined, (err) => {
+        console.error('Load error:', err);
+        loaderEl.querySelector('.label').textContent = 'Failed to load model';
+      });
+    }
+
+    // Model switcher
+    document.querySelectorAll('.model-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        interacted = false;
+        controls.autoRotate = true;
+        document.getElementById('hint').style.opacity = '1';
+        loadModel(btn.dataset.model);
+      });
+    });
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animate
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Initial load
+    loadModel('macbook');
+  </script>
+</body>
+</html>
