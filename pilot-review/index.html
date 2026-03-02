@@ -2,43 +2,410 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>VESSEL + DRAFT — Pilot Mockup Review</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Product Cover Review — 8 Products</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, 'Inter', sans-serif; padding: 40px 24px 80px; }
-h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
-.sub { font-size: 13px; color: #666; margin-bottom: 40px; }
-.section { margin-bottom: 56px; }
-.section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #555; margin-bottom: 16px; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 16px; }
-.card { background: #111; border: 1px solid #1e1e1e; border-radius: 10px; overflow: hidden; }
-.card img { width: 100%; display: block; }
-.card-label { font-size: 11px; color: #555; padding: 10px 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  :root {
+    --bg: #0A0A0A;
+    --surface: #111111;
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --muted: rgba(255,255,255,0.4);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    padding: 48px 64px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+  .stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 20px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: #FFFFFF;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .products {
+    padding: 48px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+  .product-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .product-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .product-name-tag {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  .product-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid;
+    opacity: 0.8;
+  }
+  .product-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    margin-left: auto;
+    font-style: italic;
+  }
+  .images-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .image-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .image-wrapper.square-wrap {
+    grid-column: 1 / -1;
+    max-width: 400px;
+  }
+  .image-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .image-wrapper img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .square-row {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 12px;
+    padding: 48px 64px;
+    border-top: 1px solid var(--border);
+  }
+  .square-row h2 {
+    grid-column: 1 / -1;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .square-thumb img {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+  }
+  footer {
+    padding: 32px 64px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
 </style>
 </head>
 <body>
-<h1>Pilot Mockup Review — VESSEL + DRAFT</h1>
-<div class="sub">5 images per product · March 1, 2026 · For WJP review</div>
 
-<div class="section">
-  <div class="section-title">VESSEL — Notion Writing OS · $22</div>
-  <div class="grid">
-    <div class="card"><img src="vessel/vessel-01.jpg"><div class="card-label">01 · Browser window</div></div>
-    <div class="card"><img src="vessel/vessel-02.jpg"><div class="card-label">02 · iPad mockup</div></div>
-    <div class="card"><img src="vessel/vessel-03.jpg"><div class="card-label">03 · macOS window (hero)</div></div>
-    <div class="card"><img src="vessel/vessel-04.jpg"><div class="card-label">04 · Detail crop</div></div>
-    <div class="card"><img src="vessel/vessel-05.jpg"><div class="card-label">05 · Multi-device</div></div>
+<header>
+  <h1>Digital Product Covers — Pilot Review</h1>
+  <p>Gumroad-ready cover images for 8 digital products · Dark minimal design system · Generated March 2026</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Products</div></div>
+    <div class="stat"><div class="stat-num">32</div><div class="stat-label">Images</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Per Product</div></div>
+    <div class="stat"><div class="stat-num">$384</div><div class="stat-label">Total Potential</div></div>
   </div>
+</header>
+
+<div class="products">
+
+  <!-- VESSEL -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#D4891A">VESSEL</div>
+      <div class="product-badge" style="color:#D4891A; border-color:#D4891A">$47 · Writing System</div>
+      <div class="product-tagline">From idea to audience. In one space.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/vessel-01-hero.jpg" alt="VESSEL Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/vessel-04-square.jpg" alt="VESSEL Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/vessel-02-features.jpg" alt="VESSEL Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/vessel-03-inside.jpg" alt="VESSEL Inside">
+      </div>
+    </div>
+  </div>
+
+  <!-- DRAFT -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#F5C518">DRAFT</div>
+      <div class="product-badge" style="color:#F5C518; border-color:#F5C518">$39 · Content Templates</div>
+      <div class="product-tagline">90 days of content. Already written.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/draft-01-hero.jpg" alt="DRAFT Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/draft-04-square.jpg" alt="DRAFT Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/draft-02-features.jpg" alt="DRAFT Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/draft-03-inside.jpg" alt="DRAFT Inside">
+      </div>
+    </div>
+  </div>
+
+  <!-- STACK -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#00C9A7">STACK</div>
+      <div class="product-badge" style="color:#00C9A7; border-color:#00C9A7">$49 · AI Prompts</div>
+      <div class="product-tagline">100 prompts. Zero blank page.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/stack-01-hero.jpg" alt="STACK Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/stack-04-square.jpg" alt="STACK Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/stack-02-features.jpg" alt="STACK Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/stack-03-inside.jpg" alt="STACK Inside">
+      </div>
+    </div>
+  </div>
+
+  <!-- BLUEPRINT -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#4361EE">BLUEPRINT</div>
+      <div class="product-badge" style="color:#4361EE; border-color:#4361EE">$79 · Brand System</div>
+      <div class="product-tagline">Look like a protocol. Not a side project.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/blueprint-01-hero.jpg" alt="BLUEPRINT Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/blueprint-04-square.jpg" alt="BLUEPRINT Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/blueprint-02-features.jpg" alt="BLUEPRINT Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/blueprint-03-inside.jpg" alt="BLUEPRINT Inside">
+      </div>
+    </div>
+  </div>
+
+  <!-- LEDGER -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#00D68F">LEDGER</div>
+      <div class="product-badge" style="color:#00D68F; border-color:#00D68F">$29 · Portfolio Tracker</div>
+      <div class="product-tagline">Every trade. Every lesson. One place.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/ledger-01-hero.jpg" alt="LEDGER Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/ledger-04-square.jpg" alt="LEDGER Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/ledger-02-features.jpg" alt="LEDGER Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/ledger-03-inside.jpg" alt="LEDGER Inside">
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#7B2FBE">FLOW</div>
+      <div class="product-badge" style="color:#7B2FBE; border-color:#7B2FBE">$47 · Growth Playbook</div>
+      <div class="product-tagline">From 0 to 10K. Step by step.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/flow-01-hero.jpg" alt="FLOW Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/flow-04-square.jpg" alt="FLOW Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/flow-02-features.jpg" alt="FLOW Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/flow-03-inside.jpg" alt="FLOW Inside">
+      </div>
+    </div>
+  </div>
+
+  <!-- PULSE -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#FF006E">PULSE</div>
+      <div class="product-badge" style="color:#FF006E; border-color:#FF006E">$37 · Growth System</div>
+      <div class="product-tagline">0 to 45K followers. The system.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/pulse-01-hero.jpg" alt="PULSE Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/pulse-04-square.jpg" alt="PULSE Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/pulse-02-features.jpg" alt="PULSE Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/pulse-03-inside.jpg" alt="PULSE Inside">
+      </div>
+    </div>
+  </div>
+
+  <!-- FORGE -->
+  <div class="product-section">
+    <div class="product-header">
+      <div class="product-name-tag" style="color:#FF6B35">FORGE</div>
+      <div class="product-badge" style="color:#FF6B35; border-color:#FF6B35">$59 · Launch Kit</div>
+      <div class="product-tagline">Build. Launch. Ship.</div>
+    </div>
+    <div class="images-grid">
+      <div class="image-wrapper">
+        <div class="image-label">01 — Hero Cover (1280×720)</div>
+        <img src="../assets/final-covers/forge-01-hero.jpg" alt="FORGE Hero">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">04 — Square Hero (1080×1080)</div>
+        <img src="../assets/final-covers/forge-04-square.jpg" alt="FORGE Square">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">02 — Feature Panel (1280×720)</div>
+        <img src="../assets/final-covers/forge-02-features.jpg" alt="FORGE Features">
+      </div>
+      <div class="image-wrapper">
+        <div class="image-label">03 — What's Inside (1280×720)</div>
+        <img src="../assets/final-covers/forge-03-inside.jpg" alt="FORGE Inside">
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="section">
-  <div class="section-title">DRAFT — 90 Days of Crypto Content · $19</div>
-  <div class="grid">
-    <div class="card"><img src="draft/draft-01.jpg"><div class="card-label">01 · MacBook mockup</div></div>
-    <div class="card"><img src="draft/draft-03.jpg"><div class="card-label">02 · Browser window (hero)</div></div>
-    <div class="card"><img src="draft/draft-04.jpg"><div class="card-label">03 · Template detail</div></div>
-    <div class="card"><img src="draft/draft-05.jpg"><div class="card-label">04 · Multi-device</div></div>
-  </div>
+<!-- Square grid overview -->
+<div class="square-row">
+  <h2>Square Thumbnails — At a Glance</h2>
+  <div class="square-thumb"><img src="../assets/final-covers/vessel-04-square.jpg" alt="VESSEL"></div>
+  <div class="square-thumb"><img src="../assets/final-covers/draft-04-square.jpg" alt="DRAFT"></div>
+  <div class="square-thumb"><img src="../assets/final-covers/stack-04-square.jpg" alt="STACK"></div>
+  <div class="square-thumb"><img src="../assets/final-covers/blueprint-04-square.jpg" alt="BLUEPRINT"></div>
+  <div class="square-thumb"><img src="../assets/final-covers/ledger-04-square.jpg" alt="LEDGER"></div>
+  <div class="square-thumb"><img src="../assets/final-covers/flow-04-square.jpg" alt="FLOW"></div>
+  <div class="square-thumb"><img src="../assets/final-covers/pulse-04-square.jpg" alt="PULSE"></div>
+  <div class="square-thumb"><img src="../assets/final-covers/forge-04-square.jpg" alt="FORGE"></div>
 </div>
+
+<footer>
+  <span>8 products · 32 images · Gumroad-ready</span>
+  <span>Generated March 2026 · kikaionchain</span>
+</footer>
+
 </body>
 </html>
